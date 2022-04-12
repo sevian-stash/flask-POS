@@ -12,7 +12,13 @@ class IV_Transaction(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -29,7 +35,13 @@ class AR_Transaction(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -46,7 +58,36 @@ class AP_Transaction(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
+        return
+
+    def update():
+        return 
+
+    def delete():
+        return
+
+class PO_Transaction(object):
+
+    def __init__(self):
+        super(PO_Transaction, self).__init__()
+    
+    def add():
+        return 
+
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -63,7 +104,13 @@ class Inventory(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -80,7 +127,13 @@ class Customer(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -97,7 +150,13 @@ class User(object):
     def add():
         return 
 
-    def read():
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
         return
 
     def update():
@@ -112,17 +171,21 @@ class User(object):
 @app.route("/")
 def main():
     # With trx data
-    return render_template('view.html')
+    return render_template('dashboard/index.html')
 
 # Inventory Transaction Route
+
+@app.route("/transaction")
+def transaction():
+    return render_template('transaction/index.html')
 
 @app.route("/transaction/add")
 def transaction_add():
     return IV_Transaction.add()
 
-@app.route("/transaction/read")
-def transaction_read():
-    return IV_Transaction.read()
+@app.route("/transaction/read/<id>")
+def transaction_read(id=None):
+    return IV_Transaction.read(id)
 
 @app.route("/transaction/update")
 def transaction_update():
@@ -136,12 +199,16 @@ def transaction_delete():
 # AR Transaction Route
 
 @app.route("/account_receivable/add")
+def account_receivable():
+    return render_template('')
+
+@app.route("/account_receivable/add")
 def account_receivable_add():
     return AR_Transaction.add()
 
-@app.route("/account_receivable/read")
-def account_receivable_read():
-    return AR_Transaction.read()
+@app.route("/account_receivable/read/<id>")
+def account_receivable_read(id=None):
+    return AR_Transaction.read(id)
 
 @app.route("/account_receivable/update")
 def account_receivable_update():
@@ -155,12 +222,16 @@ def account_receivable_delete():
 # AP Transaction Route
 
 @app.route("/account_payable/add")
+def account_payable():
+    return render_template('')
+
+@app.route("/account_payable/add")
 def account_payable_add():
     return AP_Transaction.add()
 
-@app.route("/account_payable/read")
-def account_payable_read():
-    return AP_Transaction.read()
+@app.route("/account_payable/read/<id>")
+def account_payable_read(id=None):
+    return AP_Transaction.read(id)
 
 @app.route("/account_payable/update")
 def account_payable_update():
@@ -171,15 +242,42 @@ def account_payable_delete():
     return AP_Transaction.delete()
 
 # End AP Transaction Route
+# PO Transaction Route
+
+@app.route("/purchase_order/add")
+def purchase_order():
+    return render_template('')
+
+@app.route("/purchase_order/add")
+def purchase_order_add():
+    return AP_Transaction.add()
+
+@app.route("/purchase_order/read/<id>")
+def purchase_order_read(id=None):
+    return AP_Transaction.read(id)
+
+@app.route("/purchase_order/update")
+def purchase_order_update():
+    return AP_Transaction.update()
+
+@app.route("/purchase_order/delete")
+def purchase_order_delete():
+    return AP_Transaction.delete()
+
+# End PO Transaction Route
 # Inventory Route
+
+@app.route("/inventory/add")
+def inventory():
+    return render_template('')
 
 @app.route("/inventory/add")
 def inventory_add():
     return Inventory.add()
 
-@app.route("/inventory/read")
-def inventory_read():
-    return Inventory.read()
+@app.route("/inventory/read/<id>")
+def inventory_read(id=None):
+    return Inventory.read(id)
 
 @app.route("/inventory/update")
 def inventory_update():
@@ -193,12 +291,16 @@ def inventory_delete():
 # Customer Route
 
 @app.route("/customer/add")
+def customer():
+    return render_template('')
+
+@app.route("/customer/add")
 def customer_add():
     return Customer.add()
 
-@app.route("/customer/read")
-def customer_read():
-    return Customer.read()
+@app.route("/customer/read/<id>")
+def customer_read(id=None):
+    return Customer.read(id)
 
 @app.route("/customer/update")
 def customer_update():
@@ -212,12 +314,16 @@ def customer_delete():
 # User Route
 
 @app.route("/user/add")
+def user():
+    return render_template('')
+
+@app.route("/user/add")
 def user_add():
     return User.add()
 
-@app.route("/user/read")
-def user_read():
-    return User.read()
+@app.route("/user/read/<id>")
+def user_read(id=None):
+    return User.read(id)
 
 @app.route("/user/update")
 def user_update():
@@ -228,3 +334,7 @@ def user_delete():
     return User.delete()
 
 # End User Route
+
+# Main 
+if __name__ == '__main__':
+	app.run(debug=True)
