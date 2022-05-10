@@ -96,6 +96,29 @@ class PO_Transaction(object):
     def delete():
         return
 
+class PR_Transaction(object):
+
+    def __init__(self):
+        super(PR_Transaction, self).__init__()
+    
+    def add():
+        return 
+
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
+        return
+
+    def update():
+        return 
+
+    def delete():
+        return
+
 class Inventory(object):
     
     def __init__(self):
@@ -250,21 +273,44 @@ def purchase_order():
 
 @app.route("/purchase_order/add")
 def purchase_order_add():
-    return AP_Transaction.add()
+    return PO_Transaction.add()
 
 @app.route("/purchase_order/read/<id>")
 def purchase_order_read(id=None):
-    return AP_Transaction.read(id)
+    return PO_Transaction.read(id)
 
 @app.route("/purchase_order/update")
 def purchase_order_update():
-    return AP_Transaction.update()
+    return PO_Transaction.update()
 
 @app.route("/purchase_order/delete")
 def purchase_order_delete():
-    return AP_Transaction.delete()
+    return PO_Transaction.delete()
 
 # End PO Transaction Route
+# Purchase Receiving (GRN) Route
+
+@app.route("/purchase_receiving/add")
+def purchase_receiving():
+    return render_template('')
+
+@app.route("/purchase_receiving/add")
+def purchase_receiving_add():
+    return PR_Transaction.add()
+
+@app.route("/purchase_receiving/read/<id>")
+def purchase_receiving_read(id=None):
+    return PR_Transaction.read(id)
+
+@app.route("/purchase_receiving/update")
+def purchase_receiving_update():
+    return PR_Transaction.update()
+
+@app.route("/purchase_receiving/delete")
+def purchase_order_delete():
+    return PR_Transaction.delete()
+
+# End Purchase Receiving (GRN) Route
 # Inventory Route
 
 @app.route("/inventory/add")
