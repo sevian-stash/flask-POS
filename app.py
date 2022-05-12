@@ -307,11 +307,7 @@ def purchase_receiving_update():
     return PR_Transaction.update()
 
 @app.route("/purchase_receiving/delete")
-<<<<<<< HEAD
 def purchase_receiving_delete():
-=======
-def purchase_order_delete():
->>>>>>> d5ef66652249fd52f08c9b80dd65bc245cab2731
     return PR_Transaction.delete()
 
 # End Purchase Receiving (GRN) Route
