@@ -1,6 +1,12 @@
-from flask import Flask, render_template, flash, redirect, request, url_for, session
+from flask import Flask, render_template, flash, redirect, request, url_for
+from user import User
+from markupsafe import escape
 
 app = Flask(__name__)
+app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0'
+
+# Create the object first
+User = User()
 
 # Start Class/Method
 
@@ -165,36 +171,27 @@ class Customer(object):
     def delete():
         return
 
-class User(object):
-    
-    def __init__(self):
-        super(User, self).__init__()
-
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
 # End Class/Method
+
+
 # Start Route
 
 @app.route("/")
-def main():
+def index():
     # With trx data
-    return render_template('dashboard/index.html')
+    return User.is_logged_in(render_template('dashboard/index.html'))
+
+@app.route("/login")
+def login():
+    # With trx data
+    return render_template('login/index.html')
+
+@app.route("/logout")
+def logout():
+    # With trx data
+    return User.logout(redirect(url_for('login')))
+
+# @app.route("/api/")
 
 # Inventory Transaction Route
 
@@ -221,9 +218,9 @@ def transaction_delete():
 # End Inventory Transaction Route
 # AR Transaction Route
 
-@app.route("/account_receivable/add")
+@app.route("/account_receivable")
 def account_receivable():
-    return render_template('')
+    return render_template('account_receivable/index.html')
 
 @app.route("/account_receivable/add")
 def account_receivable_add():
@@ -244,7 +241,7 @@ def account_receivable_delete():
 # End AR Transaction Route
 # AP Transaction Route
 
-@app.route("/account_payable/add")
+@app.route("/account_payable")
 def account_payable():
     return render_template('')
 
@@ -267,7 +264,7 @@ def account_payable_delete():
 # End AP Transaction Route
 # PO Transaction Route
 
-@app.route("/purchase_order/add")
+@app.route("/purchase_order")
 def purchase_order():
     return render_template('')
 
@@ -290,7 +287,7 @@ def purchase_order_delete():
 # End PO Transaction Route
 # Purchase Receiving (GRN) Route
 
-@app.route("/purchase_receiving/add")
+@app.route("/purchase_receiving")
 def purchase_receiving():
     return render_template('')
 
@@ -313,7 +310,7 @@ def purchase_receiving_delete():
 # End Purchase Receiving (GRN) Route
 # Inventory Route
 
-@app.route("/inventory/add")
+@app.route("/inventory")
 def inventory():
     return render_template('')
 
@@ -336,7 +333,7 @@ def inventory_delete():
 # End Inventory Route
 # Customer Route
 
-@app.route("/customer/add")
+@app.route("/customer")
 def customer():
     return render_template('')
 
@@ -359,13 +356,17 @@ def customer_delete():
 # End Customer Route
 # User Route
 
-@app.route("/user/add")
-def user():
-    return render_template('')
+@app.route("/user/login", methods=['POST'])
+def user_login():
+    user = escape(request.form['username'])
+    password = request.form['password']
+    return User.login(user,password)
 
-@app.route("/user/add")
+@app.route("/user/add", methods = ["POST"])
 def user_add():
-    return User.add()
+    user = escape(request.form['username'])
+    password = request.form['password']
+    return User.add(user,password)
 
 @app.route("/user/read/<id>")
 def user_read(id=None):
