@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Corona Admin</title>
+    <title>Happy Pancing</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Account_Receivable/style.css') }}" >
@@ -17,15 +17,29 @@
         {% include "layout/_topnav.html" %}
         <div class="main-panel">
           <div class="content-wrapper">
-            
+          <!-- Message Flash -->
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              {% for message in messages %}
+              <div class="alert alert-warning alert-dismissible text-center" role="alert">
+                <span class=""><b>{{message}}</b></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <!-- Content -->
             <div class="page-header">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Account Receivable</li>
+                  <li class="breadcrumb-item"><a href="/">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">User</li>
                 </ol>
               </nav>
-              <h3 class="page-title"> All AR Transaction(s) </h3>
+              <h3 class="page-title"> All User(s) </h3>
             </div>
             <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
             <div class="row">
@@ -33,30 +47,33 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="card-title text-right">
-                      <button class="btn btn-primary">Details</button>
+                      <form action="/user/read/" method="POST">
+                        <div class="input-group col-lg-3 col-md-4 mb-2 p-0 float-right">
+                          <div class="input-group-prepend">
+                            <button class="btn btn-primary">Open</button>
+                          </div>
+                          <input type="text" class="form-control text-light" placeholder="Doc. ID" name="search_id">
+                        </div>
+                      </form>
                     </div>
-                    <!-- <p class="card-description"> Add class <code>.table-striped</code></p> -->
                     <div class="table-responsive ">
                       <table class="table table-striped table-bordered">
                         <thead>
                           <tr>
-                            <th class="text-primary"><b> AR ID </b></th>
-                            <th class="text-primary"><b> SO ID </b></th>
-                            <th class="text-primary"><b> Customer </b></th>
-                            <th class="text-primary"><b> Date </b></th>
-                            <th class="text-primary"><b> Total Amount </b></th>
+                            <th class="text-primary"><b> ID </b></th>
+                            <th class="text-primary"><b> Name </b></th>
                           </tr>
                         </thead>
                         <tbody>
-                          {% for i in range(100) %}
-                          <tr>
-                            <td> AR-{{i}} </td>
-                            <td> SO-{{i}} </td>
-                            <td> CUST-{{i}} </td>
-                            <td> June 16, 2022 </td>
-                            <td> $ 999{{i}}.00 </td>
+                          {% if message != [] %}
+                          {% for row in message %}
+                          <tr class="text-light" id="{{row[0]}}">
+                            {% for item in row %}
+                            <td>{{item}}</td>
+                            {% endfor %}
                           </tr>
                           {% endfor %}
+                          {% endif %}
                         </tbody>
                       </table>
                     </div>
@@ -65,6 +82,7 @@
               </div>
               
             </div>
+            <!-- End Table Card -->
           </div>
         </div>
       </div>

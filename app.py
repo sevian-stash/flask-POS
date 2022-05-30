@@ -148,6 +148,29 @@ class Inventory(object):
     def delete():
         return
 
+class Supplier(object):
+    
+    def __init__(self):
+        super(Supplier, self).__init__()
+
+    def add():
+        return 
+
+    def read(id):
+        if id is None:
+            # Return all
+            return 
+        else:
+            # return by id
+            return
+        return
+
+    def update():
+        return 
+
+    def delete():
+        return
+
 class Customer(object):
     
     def __init__(self):
@@ -181,202 +204,246 @@ def index():
     # With trx data
     return User.is_logged_in(render_template('dashboard/index.html'))
 
-@app.route("/login")
+@app.route("/login/")
 def login():
     # With trx data
     return render_template('login/index.html')
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     # With trx data
     return User.logout(redirect(url_for('login')))
 
-# @app.route("/api/")
-
 # Inventory Transaction Route
 
-@app.route("/transaction")
+@app.route("/transaction/")
 def transaction():
     return render_template('transaction/index.html')
 
-@app.route("/transaction/add")
+@app.route("/transaction/add/")
 def transaction_add():
     return IV_Transaction.add()
 
-@app.route("/transaction/read/<id>")
+@app.route("/transaction/read/<id>/")
 def transaction_read(id=None):
     return IV_Transaction.read(id)
 
-@app.route("/transaction/update")
+@app.route("/transaction/update/")
 def transaction_update():
     return IV_Transaction.update()
 
-@app.route("/transaction/delete")
+@app.route("/transaction/delete/")
 def transaction_delete():
     return IV_Transaction.delete()
 
 # End Inventory Transaction Route
 # AR Transaction Route
 
-@app.route("/account_receivable")
+@app.route("/account_receivable/")
 def account_receivable():
     return render_template('account_receivable/index.html')
 
-@app.route("/account_receivable/add")
+@app.route("/account_receivable/add/")
 def account_receivable_add():
     return AR_Transaction.add()
 
-@app.route("/account_receivable/read/<id>")
+@app.route("/account_receivable/read/<id>/")
 def account_receivable_read(id=None):
-    return AR_Transaction.read(id)
+    return render_template('account_receivable/detail.html')
+    # return AR_Transaction.read(id)
 
-@app.route("/account_receivable/update")
+@app.route("/account_receivable/update/")
 def account_receivable_update():
     return AR_Transaction.update()
 
-@app.route("/account_receivable/delete")
+@app.route("/account_receivable/delete/")
 def account_receivable_delete():
     return AR_Transaction.delete()
 
 # End AR Transaction Route
 # AP Transaction Route
 
-@app.route("/account_payable")
+@app.route("/account_payable/")
 def account_payable():
-    return render_template('')
+    return render_template('account_payable/index.html')
 
-@app.route("/account_payable/add")
+@app.route("/account_payable/add/")
 def account_payable_add():
     return AP_Transaction.add()
 
-@app.route("/account_payable/read/<id>")
+@app.route("/account_payable/read/<id>/")
 def account_payable_read(id=None):
-    return AP_Transaction.read(id)
+    return render_template('account_payable/detail.html')
+    # return AP_Transaction.read(id)
 
-@app.route("/account_payable/update")
+@app.route("/account_payable/update/")
 def account_payable_update():
     return AP_Transaction.update()
 
-@app.route("/account_payable/delete")
+@app.route("/account_payable/delete/")
 def account_payable_delete():
     return AP_Transaction.delete()
 
 # End AP Transaction Route
 # PO Transaction Route
 
-@app.route("/purchase_order")
+@app.route("/purchase_order/")
 def purchase_order():
     return render_template('')
 
-@app.route("/purchase_order/add")
+@app.route("/purchase_order/add/")
 def purchase_order_add():
     return PO_Transaction.add()
 
-@app.route("/purchase_order/read/<id>")
+@app.route("/purchase_order/read/<id>/")
 def purchase_order_read(id=None):
     return PO_Transaction.read(id)
 
-@app.route("/purchase_order/update")
+@app.route("/purchase_order/update/")
 def purchase_order_update():
     return PO_Transaction.update()
 
-@app.route("/purchase_order/delete")
+@app.route("/purchase_order/delete/")
 def purchase_order_delete():
     return PO_Transaction.delete()
 
 # End PO Transaction Route
 # Purchase Receiving (GRN) Route
 
-@app.route("/purchase_receiving")
+@app.route("/purchase_receiving/")
 def purchase_receiving():
     return render_template('')
 
-@app.route("/purchase_receiving/add")
+@app.route("/purchase_receiving/add/")
 def purchase_receiving_add():
     return PR_Transaction.add()
 
-@app.route("/purchase_receiving/read/<id>")
+@app.route("/purchase_receiving/read/<id>/")
 def purchase_receiving_read(id=None):
     return PR_Transaction.read(id)
 
-@app.route("/purchase_receiving/update")
+@app.route("/purchase_receiving/update/")
 def purchase_receiving_update():
     return PR_Transaction.update()
 
-@app.route("/purchase_receiving/delete")
+@app.route("/purchase_receiving/delete/")
 def purchase_receiving_delete():
     return PR_Transaction.delete()
 
 # End Purchase Receiving (GRN) Route
 # Inventory Route
 
-@app.route("/inventory")
+@app.route("/inventory/")
 def inventory():
-    return render_template('')
+    return render_template('inventory/index.html')
 
-@app.route("/inventory/add")
+@app.route("/inventory/add/")
 def inventory_add():
     return Inventory.add()
 
-@app.route("/inventory/read/<id>")
+@app.route("/inventory/read/<id>/")
 def inventory_read(id=None):
-    return Inventory.read(id)
+    return render_template('inventory/detail.html')
+    # return Inventory.read(id)
 
-@app.route("/inventory/update")
+@app.route("/inventory/update/")
 def inventory_update():
     return Inventory.update()
 
-@app.route("/inventory/delete")
+@app.route("/inventory/delete/")
 def inventory_delete():
     return Inventory.delete()
 
 # End Inventory Route
+# Supplier Route
+
+@app.route("/supplier/")
+def supplier():
+    return render_template('supplier/index.html')
+
+@app.route("/supplier/add/")
+def supplier_add():
+    return Supplier.add()
+
+@app.route("/supplier/read/<id>/")
+def supplier_read(id=None):
+    return render_template('supplier/detail.html')
+    # return Supplier.read(id)
+
+@app.route("/supplier/update/")
+def supplier_update():
+    return Supplier.update()
+
+@app.route("/supplier/delete/")
+def supplier_delete():
+    return Supplier.delete()
+
+# End Supplier Route
 # Customer Route
 
-@app.route("/customer")
+@app.route("/customer/")
 def customer():
-    return render_template('')
+    return render_template('customer/index.html')
 
-@app.route("/customer/add")
+@app.route("/customer/add/")
 def customer_add():
     return Customer.add()
 
-@app.route("/customer/read/<id>")
+@app.route("/customer/read/<id>/")
 def customer_read(id=None):
-    return Customer.read(id)
+    return render_template('customer/detail.html')
+    # return Customer.read(id)
 
-@app.route("/customer/update")
+@app.route("/customer/update/")
 def customer_update():
     return Customer.update()
 
-@app.route("/customer/delete")
+@app.route("/customer/delete/")
 def customer_delete():
     return Customer.delete()
 
 # End Customer Route
 # User Route
 
-@app.route("/user/login", methods=['POST'])
+@app.route("/user/")
+def user():
+    return User.read()
+
+@app.route("/user/login/", methods=['POST'])
 def user_login():
     user = escape(request.form['username'])
     password = request.form['password']
     return User.login(user,password)
 
-@app.route("/user/add", methods = ["POST"])
+@app.route("/user/add/", methods = ["POST"])
 def user_add():
     user = escape(request.form['username'])
     password = request.form['password']
     return User.add(user,password)
 
-@app.route("/user/read/<id>")
-def user_read(id=None):
+@app.route("/user/read/", methods = ["POST"])
+def user_read():
+    id = escape(request.form['search_id']) if request.form['search_id'] else None
     return User.read(id)
 
-@app.route("/user/update")
+@app.route("/user/update/", methods = ["POST"])
 def user_update():
-    return User.update()
+    module = ['AP','AR','IV','PR','US']
+    user_id = escape(request.form['US_ID'])
+    username = escape(request.form['US_NAME'])
+    module_permission = dict()
 
-@app.route("/user/delete")
+    for id in module:
+        module_permission.update({id: {
+            '_CREATE':bool(request.form.get(f'{id}_CREATE')),
+            '_READ':bool(request.form.get(f'{id}_READ')),
+            '_UPDATE':bool(request.form.get(f'{id}_UPDATE')),
+            '_DELETE':bool(request.form.get(f'{id}_DELETE'))
+        }})
+
+    return User.update(user_id, username, module_permission)
+
+@app.route("/user/delete/")
 def user_delete():
     return User.delete()
 

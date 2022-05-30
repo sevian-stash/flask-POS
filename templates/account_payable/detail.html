@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Corona Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Account_Receivable/style.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.css') }}" >
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
+  </head>
+  <body>
+    <div class="container-scroller">
+      {% include "layout/_sidenav.html" %}
+      <div class="container-fluid page-body-wrapper">
+        {% include "layout/_topnav.html" %}
+        <div class="main-panel">
+          <div class="content-wrapper">
+            
+            <div class="page-header">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item"><a href="#">Account Payable</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">ID-0123</li>
+                </ol>
+              </nav>
+              <h3 class="page-title"> <b><i> ID-0123 </i></b> Transaction Details </h3>
+            </div>
+            <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-title text-right">
+                    <button class="btn btn-outline-danger">Delete</button>
+                    <button class="btn btn-success">Evidence</button>
+                    <button class="btn btn-primary">Save</button>
+                  </div>
+                  <div class="card-description col-lg-12">
+                    <form class="row">
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-1" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-1" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-2" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Customer</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-2" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-3" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Total Amt.</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-3" placeholder="FORM">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-4" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">GRN ID</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-4" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-5" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Due Date</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-5" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-6" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Paid Date</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-6" placeholder="FORM">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-7" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Status</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-7" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-8" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created At</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-8" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-9" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated At</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-9" placeholder="FORM">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-10" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created By</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-10" placeholder="FORM">
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label for="colFormLabelSm-11" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated By</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm" id="colFormLabelSm-11" placeholder="FORM">
+                          </div>
+                        </div>
+                      </div>
+
+                    </form>                      
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          <!-- End Summary Row -->
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="card-title text-right">
+                    <p class="text-light">Transaction Item(s)</p>
+                  </div>
+                  <div class="table-responsive ">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="text-primary"><b> Item ID </b></th>
+                          <th class="text-primary"><b> Description </b></th>
+                          <th class="text-primary"><b> Quantity </b></th>
+                          <th class="text-primary"><b> Price </b></th>
+                          <th class="text-primary"><b> Total Amount </b></th>
+                          <th class="text-primary"><b> Created At </b></th>
+                          <th class="text-primary"><b> Updated At </b></th>
+                          <th class="text-primary"><b> Created By </b></th>
+                          <th class="text-primary"><b> Updated By </b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in range(100) %}
+                        <tr>
+                          <td> UMPN-{{i}} </td>
+                          <td> Description-{{i}} </td>
+                          <td> {{i}} </td>
+                          <td> $ 999{{i}}.00 </td>
+                          <td> $ 999{{i}}.00 </td>
+                          <td> Date&By-{{i}} </td>
+                          <td> Date&By-{{i}} </td>
+                          <td> Date&By-{{i}} </td>
+                          <td> Date&By-{{i}} </td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- End Table Card -->
+            </div>
+            
+            <!-- End Table Row -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='assets/vendors/js/vendor.bundle.base.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/Account_Receivable/main.js') }}"></script>
+  </body>
+</html>
