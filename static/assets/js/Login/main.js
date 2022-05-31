@@ -2,6 +2,8 @@
 
 	"use strict";
 
+
+
   /* Preview Password */
 	$(".toggle-password").click(function() {
 
@@ -33,4 +35,7 @@
       $("#sign-up").toggleClass("d-none");
     });
   });
+
+  /* Init Toggle Tip */
+  $('[data-toggle="tooltip"]').tooltip()
 })(jQuery);

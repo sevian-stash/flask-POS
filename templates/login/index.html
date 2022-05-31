@@ -31,16 +31,18 @@
 							<div class="login-wrap p-4 p-md-5" id="sign-in">
 								<div class="d-flex">
 									<div class="w-100">
-										<h3 class="mb-4 font-weight-bold text-primary">Sign In</h3>
+										<img class="text-center" src='/.jpg'>
+										<h4 class="mb-4 font-weight-bold text-primary text-center">Happy Pancing</h4>
+										<h3 class="mb-4 font-weight-bold text-secondary">Sign In</h3>
 									</div>
 								</div>
 								<form action="/user/login/" class="signin-form" method="POST">
 									<div class="form-group mt-3">
-										<input type="text" class="form-control" name="username" required>
+										<input autocomplete="off" type="text" class="form-control" name="username" required>
 										<label class="form-control-placeholder" for="username">Username</label>
 									</div>
 									<div class="form-group">
-										<input id="password-field" type="password" name="password" class="form-control" required>
+										<input autocomplete="off" id="password-field" type="password" name="password" class="form-control" required>
 										<label class="form-control-placeholder" for="password">Password</label>
 										<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 									</div>
@@ -60,11 +62,11 @@
 								</div>
 								<form action="/user/add/" class="signup-form" method="POST">
 									<div class="form-group mt-3">
-										<input type="text" class="form-control" name="username" required>
+										<input autocomplete="off" type="text" class="form-control" name="username" required>
 										<label class="form-control-placeholder" for="username">Username</label>
 									</div>
 									<div class="form-group">
-										<input id="password-field" type="password" name="password" class="form-control" required>
+										<input autocomplete="off" id="password-field" type="password" name="password" class="form-control" data-toggle="tooltip" data-placement="right" title="Minimum 8 Characters" required>
 										<label class="form-control-placeholder" for="password">Password</label>
 										<span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 									</div>

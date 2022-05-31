@@ -32,7 +32,7 @@
             {% endwith %}
 
             <!-- Content -->
-            <form action="/user/update/" method="POST">
+            <form action="{{'/user/update/' if message[1][3] != 0 else '/user/activate/'}}" method="POST" id="user-form">
               <div class="page-header">
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
@@ -48,8 +48,15 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="card-title text-right">
-                      <button class="btn btn-outline-danger">Delete</button>
+                      {% if message[1][3] != 0 %}
+                      <button type="button" class="btn btn-outline-danger" id="user-deactivate">Deactivate</button>
+                      <button type="button" class="btn btn-primary" id="user-change-password" data-toggle="modal" data-target="#exampleModal">Change Password</button>
                       <button class="btn btn-primary">Save</button>
+                      {% endif %}
+                      {% if message[1][3] == 0 %}
+                      <h3 class="font-weight-bold text-light">Account Inactive</h3>
+                      <button class="btn btn-outline-success">Activate</button>
+                      {% endif %}
                     </div>
                     <div class="card-description col-lg-12">
                       <div class="row">
@@ -64,7 +71,7 @@
                           <div class="row my-1">
                             <label for="US_NAME" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name</label>
                             <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                              <input type="text" class="form-control form-control-sm text-light bg-dark" name="US_NAME" id="US_NAME" value="{{message[1][1]}}">
+                              <input type="text" class="form-control form-control-sm {{'text-muted' if message[1][3] == 0 else 'text-light'}} bg-dark" name="US_NAME" id="US_NAME" value="{{message[1][1]}}" {{'disabled' if message[1][3] == 0 else ''}}>
                             </div>
                           </div>
 
@@ -80,14 +87,14 @@
                           <div class="row my-1">
                             <label for="CRTD_DT" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created At</label>
                             <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="CRTD_DT" id="CRTD_DT" value="{{message[1][5]}}" disabled>
+                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="CRTD_DT" id="CRTD_DT" value="{{message[1][6]}}" disabled>
                             </div>
                           </div>
 
                           <div class="row my-1">
                             <label for="UPTD_DT" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated At</label>
                             <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="UPTD_DT" id="UPTD_DT" value="{{message[1][4]}}" disabled>
+                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="UPTD_DT" id="UPTD_DT" value="{{message[1][5]}}" disabled>
                             </div>
                           </div>
                         </div>
@@ -96,14 +103,14 @@
                           <div class="row my-1">
                             <label for="CRTD_BY" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created By</label>
                             <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="CRTD_BY" id="CRTD_BY" value="{{message[1][3]}}" disabled>
+                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="CRTD_BY" id="CRTD_BY" value="{{message[1][4]}}" disabled>
                             </div>
                           </div>
 
                           <div class="row my-1">
                             <label for="UPTD_BY" class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated By</label>
                             <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="UPTD_BY" id="UPTD_BY" value="{{message[1][6]}}" disabled>
+                              <input type="text" class="form-control form-control-sm text-muted bg-dark" name="UPTD_BY" id="UPTD_BY" value="{{message[1][7]}}" disabled>
                             </div>
                           </div>
                         </div>
@@ -147,22 +154,22 @@
                               </td>
                               <td class="p-2">
                                 <div class="form-check text-center p-0 m-0">
-                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_CREATE" checked="{{item[2]}}">
+                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_CREATE" {{'checked' if item[2] else ''}} {{'disabled' if message[1][3] == 0 else ''}}>
                                 </div>
                               </td>
                               <td class="p-2">
                                 <div class="form-check text-center p-0 m-0">
-                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_READ" checked="{{item[3]}}">
+                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_READ" {{'checked' if item[3] else ''}} {{'disabled' if message[1][3] == 0 else ''}}>
                                 </div>
                               </td>
                               <td class="p-2">
                                 <div class="form-check text-center p-0 m-0">
-                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_UPDATE" checked="{{item[4]}}">
+                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_UPDATE" {{'checked' if item[4] else ''}} {{'disabled' if message[1][3] == 0 else ''}}>
                                 </div>
                               </td>
                               <td class="p-2">
                                 <div class="form-check text-center p-0 m-0">
-                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_DELETE" checked="{{item[5]}}">
+                                  <input type="checkbox" class="form-check-input m-0 p-0" name="{{item[1]}}_DELETE" {{'checked' if item[5] else ''}} {{'disabled' if message[1][3] == 0 else ''}}>
                                 </div>
                               </td>
                               <td class="p-2"> {{item[6]}} </td>
@@ -181,6 +188,48 @@
               </div>
               <!-- End Table Row -->
             </form>
+
+            <!-- Change Password Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                  <form action="/user/update/password/" method="POST" id="user-change-password-form">
+                    <div class="modal-header">
+                      <div class="modal-title" id="exampleModalLabel">
+                        <input type="text" class="bg-transparent border-0 text-muted font-italic font-weight-bold" name="US_ID" readonly value="{{message[0]}}">
+                        <h5>Change Password</h5>
+                      </div>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group col-lg-12">
+                        <div class="row my-1">
+                          <label for="US_PASSWORD" class="col-lg-4 col-sm-3 col-form-label col-form-label-sm text-truncate px-0">New Password</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="US_PASSWORD" id="US_PASSWORD" data-toggle="tooltip" data-placement="right" title="Minimum 8 Characters">
+                          </div>
+                        </div>
+                        <div class="row my-1">
+                          <label for="CFRM_PASSWORD" class="col-lg-4 col-sm-3 col-form-label col-form-label-sm text-truncate px-0">Retype New Password</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="CFRM_PASSWORD" id="CFRM_PASSWORD" data-toggle="tooltip" data-placement="right" title="Must be identical to previous field">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button class="btn btn-primary" id="user-change-password-submit" disabled>Change Pasword</button>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+            <!-- End Modal -->
           </div>
         </div>
       </div>
@@ -190,5 +239,6 @@
     <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/User/main.js') }}"></script>
   </body>
 </html>
