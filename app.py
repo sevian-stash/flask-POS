@@ -1,5 +1,6 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from user import User
+from customer import Customer
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -7,6 +8,7 @@ app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0'
 
 # Create the object first
 User = User()
+Customer = Customer()
 
 # Start Class/Method
 
@@ -33,10 +35,10 @@ class IV_Transaction(object):
     def delete():
         return
 
-class AR_Transaction(object):
+class Account_Receivable(object):
 
     def __init__(self):
-        super(AR_Transaction, self).__init__()
+        super(Account_Receivable, self).__init__()
     
     def add():
         return 
@@ -56,10 +58,10 @@ class AR_Transaction(object):
     def delete():
         return
 
-class AP_Transaction(object):
+class Account_Payable(object):
 
     def __init__(self):
-        super(AP_Transaction, self).__init__()
+        super(Account_Payable, self).__init__()
     
     def add():
         return 
@@ -79,10 +81,10 @@ class AP_Transaction(object):
     def delete():
         return
 
-class PO_Transaction(object):
+class Purchase_Order(object):
 
     def __init__(self):
-        super(PO_Transaction, self).__init__()
+        super(Purchase_Order, self).__init__()
     
     def add():
         return 
@@ -102,10 +104,10 @@ class PO_Transaction(object):
     def delete():
         return
 
-class PR_Transaction(object):
+class Purchase_Receiving(object):
 
     def __init__(self):
-        super(PR_Transaction, self).__init__()
+        super(Purchase_Receiving, self).__init__()
     
     def add():
         return 
@@ -171,30 +173,6 @@ class Supplier(object):
     def delete():
         return
 
-class Customer(object):
-    
-    def __init__(self):
-        super(Customer, self).__init__()
-
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
-# End Class/Method
 
 
 # Start Route
@@ -272,7 +250,7 @@ def account_receivable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AR_Transaction.add()
+    return Account_Receivable.add()
 
 @app.route("/account_receivable/read/<id>/")
 def account_receivable_read(id=None):
@@ -280,21 +258,21 @@ def account_receivable_read(id=None):
         return redirect(url_for('login'))
 
     return render_template('account_receivable/detail.html')
-    # return AR_Transaction.read(id)
+    # return Account_Receivable.read(id)
 
 @app.route("/account_receivable/update/")
 def account_receivable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AR_Transaction.update()
+    return Account_Receivable.update()
 
 @app.route("/account_receivable/delete/")
 def account_receivable_delete():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AR_Transaction.delete()
+    return Account_Receivable.delete()
 
 # End AR Transaction Route
 # AP Transaction Route
@@ -311,7 +289,7 @@ def account_payable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AP_Transaction.add()
+    return Account_Payable.add()
 
 @app.route("/account_payable/read/<id>/")
 def account_payable_read(id=None):
@@ -319,21 +297,21 @@ def account_payable_read(id=None):
         return redirect(url_for('login'))
 
     return render_template('account_payable/detail.html')
-    # return AP_Transaction.read(id)
+    # return Account_Payable.read(id)
 
 @app.route("/account_payable/update/")
 def account_payable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AP_Transaction.update()
+    return Account_Payable.update()
 
 @app.route("/account_payable/delete/")
 def account_payable_delete():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return AP_Transaction.delete()
+    return Account_Payable.delete()
 
 # End AP Transaction Route
 # PO Transaction Route
@@ -350,28 +328,28 @@ def purchase_order_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PO_Transaction.add()
+    return Purchase_Order.add()
 
 @app.route("/purchase_order/read/<id>/")
 def purchase_order_read(id=None):
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PO_Transaction.read(id)
+    return Purchase_Order.read(id)
 
 @app.route("/purchase_order/update/")
 def purchase_order_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PO_Transaction.update()
+    return Purchase_Order.update()
 
 @app.route("/purchase_order/delete/")
 def purchase_order_delete():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PO_Transaction.delete()
+    return Purchase_Order.delete()
 
 # End PO Transaction Route
 # Purchase Receiving (GRN) Route
@@ -388,28 +366,28 @@ def purchase_receiving_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PR_Transaction.add()
+    return Purchase_Receiving.add()
 
 @app.route("/purchase_receiving/read/<id>/")
 def purchase_receiving_read(id=None):
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PR_Transaction.read(id)
+    return Purchase_Receiving.read(id)
 
 @app.route("/purchase_receiving/update/")
 def purchase_receiving_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PR_Transaction.update()
+    return Purchase_Receiving.update()
 
 @app.route("/purchase_receiving/delete/")
 def purchase_receiving_delete():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return PR_Transaction.delete()
+    return Purchase_Receiving.delete()
 
 # End Purchase Receiving (GRN) Route
 # Inventory Route
@@ -497,27 +475,42 @@ def customer():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('customer/index.html')
+    return Customer.read()
 
-@app.route("/customer/add/")
+@app.route("/customer/add/", methods = ["POST","GET"])
 def customer_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Customer.add()
+    if request.method == 'GET':
+        return render_template('customer/add.html')
 
-@app.route("/customer/read/<id>/")
+    name = escape(request.form.get('AR_NAME'))
+    address = escape(request.form.get('AR_ADDRESS'))
+    phone = escape(request.form.get('AR_PHONE'))
+    status = escape(request.form.get('AR_STATUS'))
+
+    return Customer.add(name, address, phone, status)
+
+@app.route("/customer/read/", methods = ["POST"])
 def customer_read(id=None):
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('customer/detail.html')
-    # return Customer.read(id)
+    id = escape(request.form['search_id']) if request.form['search_id'] else None
 
-@app.route("/customer/update/")
+    return Customer.read(id)
+
+@app.route("/customer/update/", methods = ["POST"])
 def customer_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
+
+    name = escape(request.form['AR_NAME'])
+    address = escape(request.form['AR_ADDRESS'])
+    status = escape(request.form['AR_STATUS'])
+    phone = escape(request.form['AR_PHONE'])
+    email = escape(request.form['AR_EMAIL'])
 
     return Customer.update()
 

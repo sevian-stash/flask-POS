@@ -1,72 +1,62 @@
 import base64
 import json
-from flask import render_template, flash, redirect, request, url_for, session
+from flask import render_template, flash, redirect, url_for, session
 from model import Model
 from secret import Secret
 from datetime import datetime, date
-from markupsafe import escape
-
-
 
 class User(object):
     
     def __init__(self):
         super(User, self).__init__()
         self.module_id = ['AP','AR','IV','PR','US']
-        self.module_type = ['_CREATE','_READ','_UPDATE','_DELETE']
-        self.model = Model()
-        [self.db, self.db_cursor] = self.model.init()
+        self.Model = Model()
+        [self.db, self.db_cursor] = self.Model.init()
 
     def add(self, user, password):
-        # For register
-
         # Check for Duplicate
-        db_ret = self.model.read('us01','*',{'US_NAME':user})
+        db_ret = self.Model.read('us01','*',{'US_NAME':user})
         
         if db_ret != []:
             flash('User with same username already exists')
             return redirect(url_for('login'))
 
         # Get User Count
-        row_len = self.model.read('us01')
+        row_len = self.Model.read('us01')
         row_len = len(row_len) + 1 if row_len else '1'
         hashed_pass = Secret.hash_password(password)
         
-        # For User Summary
-        self.db_cursor.execute(
-            "INSERT INTO us01 (US_ID,US_NAME,US_PASSWORD,CRTD_DT,UPDT_DT,CRTD_BY,UPDT_BY) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            # Execute only capable of 4 args, use tuple for more
-            (f'US-{row_len}',
-                user,
-                hashed_pass,
-                datetime.date(datetime.now()),
-                datetime.date(datetime.now()),
-                '-',
-                '-'
-            )
-        )
+        # # Insert Summary
+        self.Model.insert(
+            'us01',
+            {   
+                'US_ID':f'US-{row_len}',
+                'US_NAME':user,
+                'US_PASSWORD':hashed_pass,
+                'US_ACTIVE':bool(True),
+                'CRTD_DT':datetime.date(datetime.now()),
+                'UPDT_DT':datetime.date(datetime.now()),
+                'CRTD_BY':'-',
+                'UPDT_BY':'-'
+            })
 
-        # For User Permissions 
-        for id in self.module_id:
-            self.db_cursor.execute(
-                "INSERT INTO us02 (US_ID,US_MODULEID,US_CREATE,US_READ,US_UPDATE,US_DELETE,CRTD_DT,UPDT_DT,CRTD_BY,UPDT_BY) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (f'US-{row_len}',
-                    id,
-                    int(False),int(False),int(False),int(False),
-                    datetime.date(datetime.now()),
-                    datetime.date(datetime.now()),
-                    '-',
-                    '-'
-                )
-            )
+        # Insert Details
+        self.Model.insert(
+            'us02',
+            {   
+                'US_ID':f'US-{row_len}',
+                'US_MODULEID':id,
+                'US_CREATE':int(False),
+                'US_READ':int(False),
+                'US_UPDATE':int(False),
+                'US_DELETE':int(False),
+                'CRTD_DT':datetime.date(datetime.now()),
+                'UPDT_DT':datetime.date(datetime.now()),
+                'CRTD_BY':'-',
+                'UPDT_BY':'-'
+            })
 
-        try:
-            self.db.commit()
-        except Exception as e:
-            raise e
-            flash(e)
-        finally:
-            return redirect(url_for('login'))
+        return redirect(url_for('login'))
 
     def read(self, id=None):
         session_id = self.get_session_id()
@@ -87,14 +77,14 @@ class User(object):
 
         if id is None:
             # All Users
-            data = self.model.read('us01',['US_ID','US_NAME'])
+            data = self.Model.read('us01',['US_ID','US_NAME'])
             return_path = 'user/index.html'
 
         else:
             data.append(id)
 
             # Check if Exists
-            db_ret = self.model.read('us01','*',{'US_ID':id})
+            db_ret = self.Model.read('us01','*',{'US_ID':id})
 
             if db_ret != []:
                 # Append Summary
@@ -102,7 +92,7 @@ class User(object):
                 data.append(summary)
 
                 # Append Details
-                data.append(self.model.read('us02','*',{'US_ID':id}))
+                data.append(self.Model.read('us02','*',{'US_ID':id}))
                 return_path = 'user/detail.html'
 
             else:
@@ -128,15 +118,15 @@ class User(object):
         # Update User Account
         if password is None:
             # Only Update if Changed
-            old_username = self.model.read('us01',['US_NAME'],{'US_ID':id})[0][0]
+            old_username = self.Model.read('us01',['US_NAME'],{'US_ID':id})[0][0]
 
             if old_username != new_username:
-                self.model.update('us01',
+                self.Model.update('us01',
                     {'US_NAME':new_username, 'UPDT_BY':session_id, 'UPDT_DT':datetime.date(datetime.now())},
                     {'US_ID':id})
 
             # Get Current Permission
-            db_ret = self.model.read('us02',['US_CREATE','US_READ','US_UPDATE','US_DELETE'],{'US_ID':id})
+            db_ret = self.Model.read('us02',['US_CREATE','US_READ','US_UPDATE','US_DELETE'],{'US_ID':id})
             current_permission = dict()
 
             for idx,item in enumerate(self.module_id):
@@ -152,7 +142,7 @@ class User(object):
                 for module_status in new_permission[module_id].items():
                     # Only Update if Changed
                     if current_permission[module_id][module_status[0]] != new_permission[module_id][module_status[0]]:
-                        self.model.update('us02',
+                        self.Model.update('us02',
                             {f'US{module_status[0]}':int(module_status[1]), 'UPDT_BY':session_id, 'UPDT_DT':datetime.date(datetime.now())},
                             {'US_ID':id,'US_MODULEID':module_id})
  
@@ -163,24 +153,23 @@ class User(object):
                 return redirect(url_for('user'))
 
             hashed_pass = Secret.hash_password(password)
-            self.model.update('us01',
+            self.Model.update('us01',
                 {'US_PASSWORD':hashed_pass, 'UPDT_DT':datetime.date(datetime.now()), 'UPDT_BY':session_id},
                 {'US_ID':id})
             
-        self.db.commit()
         flash('Successfully saved')
 
         return redirect(url_for('user'))
 
     def login(self, user, password):
         # Check if registered
-        db_ret = self.model.read('us01', ['US_ID','US_PASSWORD','US_ACTIVE'], {'US_NAME':user})[0]
+        db_ret = self.Model.read('us01', ['US_ID','US_PASSWORD','US_ACTIVE'], {'US_NAME':user})[0]
         if db_ret == []:
             flash('Not Registered Yet')
             return redirect(url_for('login'))
 
         # Check if User Active
-        if db_ret[2] == 0:
+        if not bool(db_ret[2]):
             flash('Account is Deactivated. Please Contact Administrator')
             return redirect(url_for('login'))
 
@@ -213,7 +202,7 @@ class User(object):
             flash("No Access Allowed")
             return redirect(url_for('user'))
 
-        self.model.update('us01', {'US_ACTIVE':int(False)},{'US_ID':id})
+        self.Model.update('us01', {'US_ACTIVE':int(False)},{'US_ID':id})
 
         # If Deactivate Own Account, Logout
         if session_id == id:
@@ -221,7 +210,6 @@ class User(object):
         
         flash('Account Deactivated')
 
-        self.db.commit()
         return redirect(url_for('user'))
 
     def activate(self, id):
@@ -238,7 +226,7 @@ class User(object):
             flash("No Access Allowed")
             return redirect(url_for('user'))
 
-        self.model.update('us01', {'US_ACTIVE':int(True)},{'US_ID':id})
+        self.Model.update('us01', {'US_ACTIVE':int(True)},{'US_ID':id})
 
         # If Deactivate Own Account, Logout
         if session_id == id:
@@ -246,7 +234,6 @@ class User(object):
         
         flash('Account Activated')
 
-        self.db.commit()
         return redirect(url_for('user'))
 
     def logout(self, path=None):
@@ -272,13 +259,13 @@ class User(object):
         return id.decode('utf-8')
 
     def is_allowed(self, id, permission):
-        (*permission_status,) = self.model.read('us02', [f'US{permission.capitalize()}'],{'US_ID':id})[0]
+        (*permission_status,) = self.Model.read('us02', [f'US{permission.capitalize()}'],{'US_ID':id})[0]
         permission_status = permission_status[0]
 
         return bool(permission_status)
 
     def is_active(self, id):
-        (*active_status,) = self.model.read('us01', ['US_ACTIVE'],{'US_ID':id})[0]
+        (*active_status,) = self.Model.read('us01', ['US_ACTIVE'],{'US_ID':id})[0]
         active_status = active_status[0]
 
         return bool(active_status)

@@ -32,54 +32,92 @@ class Model(object):
 			print('DB Closed')
 
 	def read(self, table, column='*', condition={'1':'1'}, search_limit=None):
-		condition_column = ''
-		db_ret = None
+		try:
+			cursor = self.sql.cursor(buffered=True)
+			condition_column = ''
+			db_ret = []
 
-		for idx, condition_id in enumerate(condition):
-			condition_column += f'{condition_id} = %s'
+			for idx, condition_id in enumerate(condition):
+				condition_column += f'{condition_id} = %s'
 
-			if idx < len(condition) - 1:
-				condition_column += ' AND '
+				if idx < len(condition) - 1:
+					condition_column += ' AND '
 
-		condition_value = tuple(condition.values())
+			condition_value = tuple(condition.values())
 
-		self.cursor.execute(f"SELECT {','.join(column)} FROM {table} WHERE {condition_column}", condition_value)
+			cursor.execute(f"SELECT {','.join(column)} FROM {table} WHERE {condition_column}", condition_value)
 
-		if search_limit is None:
-			db_ret = self.cursor.fetchall()
-		else:
-			db_ret = self.cursor.fetchmany(search_limit)
+			if search_limit is None:
+				db_ret = cursor.fetchall()
+			else:
+				db_ret = cursor.fetchmany(search_limit)
+		except Exception as e:
+			raise e
+			flash(e)
+		finally:
+			cursor.close()
+			return db_ret
 
-		return db_ret
+	def insert(self, table, new_value):
+		try:
+			cursor = self.sql.cursor(buffered=True)
+			# Get Reference for Insert
+			insert_column = list(new_value.keys())[0]
+			insert_value = list(new_value.values())[0]
 
-	def update(self, table, update, condition={'True':'True'}):
-		db_ret = None
-		condition_column = ''
-		update_column = ''
+			# Get Reference for Update
+			id = list(new_value.values())[0]
+			module_id = (list(new_value.values())[0][0:2]).upper()
 
-		# Spread Values from Array into Tuple
-		(*temp_unpacked,) = update.values()
-		query_value = temp_unpacked
+			cursor.execute(f"INSERT INTO {table} ({insert_column}) VALUES (%s)",(insert_value,))
+			self.sql.commit()
+			
+			# Update due to some issues
+			self.update(table, new_value, {f'{module_id}_ID':id})
+		except Exception as e:
+			raise e
+			flash(e)
+		finally:
+			cursor.close()
+			return 0
 
-		(*temp_unpacked,) = condition.values()
-		query_value += temp_unpacked
+	def update(self, table, update, condition):
+		try:
+			cursor = self.sql.cursor(buffered=True)
+			db_ret = None
+			condition_column = ''
+			update_column = ''
 
-		query_value = tuple(query_value)
+			# Spread Values from Array into Tuple
+			(*temp_unpacked,) = update.values()
+			query_value = temp_unpacked
 
-		# Concat with Proper Spacing
-		for idx, update_id in enumerate(update):
-			update_column += f'{update_id} = %s'
+			(*temp_unpacked,) = condition.values()
+			query_value += temp_unpacked
 
-			if idx < len(update) - 1:
-				update_column += ', '
+			query_value = tuple(query_value)
+
+			# Concat with Proper Spacing
+			for idx, update_id in enumerate(update):
+				update_column += f'{update_id} = %s'
+
+				if idx < len(update) - 1:
+					update_column += ', '
 
 
-		for idx, condition_id in enumerate(condition):
-			condition_column += f'{condition_id} = %s'
+			for idx, condition_id in enumerate(condition):
+				condition_column += f'{condition_id} = %s'
 
-			if idx < len(condition) - 1:
-				condition_column += ' AND '
+				if idx < len(condition) - 1:
+					condition_column += ' AND '
 
-		self.cursor.execute(f"UPDATE {table} SET {update_column} WHERE {condition_column}", query_value)
+			cursor.execute(f"UPDATE {table} SET {update_column} WHERE {condition_column}", query_value)
 
-		return True
+			self.sql.commit()
+		except Exception as e:
+			raise e
+			print(e)
+			flash(e)
+		finally:
+			cursor.close()
+			return 0

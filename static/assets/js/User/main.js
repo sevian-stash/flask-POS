@@ -2,7 +2,11 @@
 
 	"use strict";
   /* DT Init */
-  $('#index-table').DataTable(); 
+  $('#index-table').DataTable({
+    columnDefs: [
+      { type: 'natural-nohtml', targets:0 }
+    ]
+  }); 
   /* Row Selection for Search Field */
   $('#index-table tbody').on('click','tr',function () { 
     $('.selected').not(this).removeClass('selected');
