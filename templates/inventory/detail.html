@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Corona Admin</title>
+  <title>Happy Pancing</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
-  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Customer/style.css') }}" >
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Inventory/style.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.css') }}" >
   <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
 </head>
@@ -22,14 +22,14 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="/customer/">Customer</a></li>
+                <li class="breadcrumb-item"><a href="/inventory/">Inventory</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{message[0]}}</li>
               </ol>
             </nav>
-            <h3 class="page-title"> <b><i> {{message[0]}} </i></b> Customer Details </h3>
+            <h3 class="page-title"> <b><i> {{message[0]}} </i></b> Inventory Details </h3>
           </div>
           <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
-          <form action="/customer/update/" method="POST" id="customer-form">
+          <form action="/inventory/update/" method="POST" id="Inventory-form">
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -42,37 +42,52 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="AR_ID" value="{{message[0]}}" readonly>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="IV_ID" value="{{message[0]}}" readonly>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_NAME" placeholder="Customer Name" value="{{message[1][1] if message[1][1] is not none else ''}}">
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="IV_NAME" value="{{message[1][1]}}" required>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Address</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Qty.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_ADDRESS" placeholder="Customer Address" value="{{message[1][2] if message[1][2] is not none else ''}}">
+                            <input type="number" min='0' class="form-control form-control-sm text-light bg-dark" name="IV_QTY" value="{{message[1][3]}}">
                           </div>
                         </div>
                       </div>
 
                       <div class="form-group col-lg-3">
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Phone</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">UoM</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_PHONE" placeholder="Customer Phone" value="{{message[1][3] if message[1][3] is not none else ''}}">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_UOM">
+                              <option value="1" {{'selected' if message[1][5] == '1' else ''}}>M - Meter</option>
+                              <option value="2" {{'selected' if message[1][5] == '2' else ''}}>Pcs - Piece</option>
+                              <option value="3" {{'selected' if message[1][5] == '3' else ''}}>Ml - Mili liter</option>
+                            </select>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Email</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Category</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_EMAIL" placeholder="Customer Email" value="{{message[1][4] if message[1][4] is not none else ''}}">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_CATEGORY">
+                              <option value="1" {{'selected' if message[1][2] == '1' else ''}}>Umpan</option>
+                              <option value="2" {{'selected' if message[1][2] == '2' else ''}}>Peralatan</option>
+                              <option value="3" {{'selected' if message[1][2] == '3' else ''}}>Lainnya</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Price</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_AMOUNT" value="{{message[1][4]}}">
                           </div>
                         </div>
                       </div>
@@ -81,14 +96,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][7] if message[1][7] is not none else '-'}} / ({{message[1][5] if message[1][5] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][8] if message[1][8] else '-'}} / ({{message[1][6] if message[1][6] else '-'}})" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][8] if message[1][8] is not none else '-'}} / ({{message[1][6] if message[1][6] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][9] if message[1][9] else '-'}} / ({{message[1][7] if message[1][7] else '-'}})" disabled>
                           </div>
                         </div>
                       </div>
@@ -149,6 +164,6 @@
   <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/js/Customer/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/Inventory/main.js') }}"></script>
 </body>
 </html>

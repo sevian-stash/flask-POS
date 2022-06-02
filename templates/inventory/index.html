@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Corona Admin</title>
+    <title>Happy Pancing</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Customer/style.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Inventory/style.css') }}" >
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.css') }}" >
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
   </head>
@@ -35,10 +35,10 @@
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Customer</li>
+                  <li class="breadcrumb-item active" aria-current="page">Inventory</li>
                 </ol>
               </nav>
-              <h3 class="page-title"> All AR Customer(s) </h3>
+              <h3 class="page-title"> All Inventory(s) </h3>
             </div>
             <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
             <div class="row">
@@ -46,9 +46,9 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="card-title text-right">
-                      <form action="/customer/read/" method="POST">
+                      <form action="/inventory/read/" method="POST">
                         <div class="input-group col-lg-4 col-md-5 mb-2 p-0 float-right">
-                          <a class="btn btn-success mx-3 py-2" href="/customer/add">Add</a>
+                          <a class="btn btn-success mx-3 py-2" href="/inventory/add">Add</a>
                           <div class="input-group-prepend">
                             <button class="btn btn-primary">Open</button>
                           </div>
@@ -62,7 +62,8 @@
                           <tr>
                             <th class="text-primary"><b> ID </b></th>
                             <th class="text-primary"><b> Name </b></th>
-                            <th class="text-primary"><b> Address </b></th>
+                            <th class="text-primary"><b> Qty </b></th>
+                            <th class="text-primary"><b> Price </b></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -93,6 +94,6 @@
     <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/Customer/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/Inventory/main.js') }}"></script>
   </body>
 </html>

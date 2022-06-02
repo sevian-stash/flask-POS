@@ -2,6 +2,7 @@ from flask import Flask, render_template, flash, redirect, request, url_for
 from user import User
 from customer import Customer
 from supplier import Supplier
+from inventory import Inventory
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -11,6 +12,7 @@ app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0'
 User = User()
 Customer = Customer()
 Supplier = Supplier()
+Inventory = Inventory()
 
 # Start Class/Method
 
@@ -352,29 +354,47 @@ def inventory():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('inventory/index.html')
+    return Inventory.read()
 
-@app.route("/inventory/add/")
+@app.route("/inventory/add/", methods = ["POST","GET"])
 def inventory_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Inventory.add()
+    if request.method == 'GET':
+        return render_template('inventory/add.html')
 
-@app.route("/inventory/read/<id>/")
+    name = escape(request.form.get('IV_NAME'))
+    category = escape(request.form.get('IV_CATEGORY'))
+    qty = escape(request.form.get('IV_QTY'))
+    amount = escape(request.form.get('IV_AMOUNT'))
+    uom = escape(request.form.get('IV_UOM'))
+
+    return Inventory.add(name, category, qty, amount, uom)
+
+@app.route("/inventory/read/", methods = ["POST"])
 def inventory_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('inventory/detail.html')
+    id = escape(request.form['search_id'])
+
+    return Inventory.read(id)
     # return Inventory.read(id)
 
-@app.route("/inventory/update/")
+@app.route("/inventory/update/", methods = ["POST"])
 def inventory_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Inventory.update()
+    id = escape(request.form.get('IV_ID'))
+    name = escape(request.form.get('IV_NAME'))
+    category = escape(request.form.get('IV_CATEGORY'))
+    qty = escape(request.form.get('IV_QTY'))
+    amount = escape(request.form.get('IV_AMOUNT'))
+    uom = escape(request.form.get('IV_UOM'))
+
+    return Inventory.update(id, name, category, qty, amount, uom)
 
 @app.route("/inventory/delete/")
 def inventory_delete():

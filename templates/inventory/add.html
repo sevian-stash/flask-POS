@@ -6,7 +6,7 @@
   <title>Happy Pancing</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
-  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Customer/style.css') }}" >
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Inventory/style.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.css') }}" >
   <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
 </head>
@@ -18,16 +18,16 @@
       <div class="main-panel">
         <div class="content-wrapper">
 
-          <form action="/customer/add/" method="POST" id="Customer-form">
+          <form action="/inventory/add/" method="POST" id="inventory-form">
             <div class="page-header">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="/">Home</a></li>
-                  <li class="breadcrumb-item"><a href="/customer/">Customer</a></li>
+                  <li class="breadcrumb-item"><a href="/inventory/">Inventory</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Add</li>
                 </ol>
               </nav>
-              <h3 class="page-title"> Add New Customer </h3>
+              <h3 class="page-title"> Add New Inventory </h3>
             </div>
             <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
             <div class="col-lg-12 grid-margin stretch-card">
@@ -49,30 +49,47 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name*</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_NAME" placeholder="Customer Name" required>
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="IV_NAME" placeholder="Item Name" required>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Address</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Qty.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_ADDRESS" placeholder="Customer Address">
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="IV_QTY" placeholder="Item Quantity">
                           </div>
                         </div>
                       </div>
 
                       <div class="form-group col-lg-3">
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Phone</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">UoM</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_PHONE" placeholder="Customer Phone">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_UOM">
+                              <option disabled selected>-</option>
+                              <option value="1">M - Meter</option>
+                              <option value="2">Pcs - Piece</option>
+                              <option value="3">Ml - Mililiter</option>
+                            </select>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Email</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Category</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_EMAIL" placeholder="Customer Email">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_CATEGORY">
+                              <option disabled selected>-</option>
+                              <option value="1">Umpan</option>
+                              <option value="2">Peralatan</option>
+                              <option value="3">Lainnya</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Price</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_AMOUNT" placeholder="Item Price">
                           </div>
                         </div>
                       </div>
@@ -109,6 +126,6 @@
   <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
-  <script src="{{ url_for('static', filename='assets/js/Customer/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/Inventory/main.js') }}"></script>
 </body>
 </html>

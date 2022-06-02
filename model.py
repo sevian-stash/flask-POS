@@ -61,7 +61,7 @@ class Model(object):
 	def insert(self, table, new_value):
 		try:
 			cursor = self.sql.cursor(buffered=True)
-			
+
 			parameterized_holder = []
 			insert_column = []
 			insert_value = tuple(new_value.values())
