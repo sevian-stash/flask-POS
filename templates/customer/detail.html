@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Corona Admin</title>
+  <title>Happy Pancing</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
   <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Customer/style.css') }}" >
@@ -34,7 +34,7 @@
               <div class="card">
                 <div class="card-body">
                   <div class="card-title text-right">
-                    <button class="btn btn-success" {{'disabled' if message[1] == '3' else ''}}>Save</button>
+                    <button class="btn btn-success">Save</button>
                   </div>
                   <div class="card-description col-lg-12">
                     <div class="row">
@@ -42,48 +42,37 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[0]}}" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="AR_ID" value="{{message[0]}}" readonly>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_NAME" placeholder="Customer Name" value="{{message[2][2] if message[2][2] is not none else '-'}}" {{'disabled' if message[1] == '3' else ''}}>
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_NAME" placeholder="Customer Name" value="{{message[1][1] if message[1][1] is not none else ''}}">
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Address</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_ADDRESS" placeholder="Customer Address" value="{{message[2][3] if message[2][3] is not none else '-'}}" {{'disabled' if message[1] == '3' else ''}}>
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AR_ADDRESS" placeholder="Customer Address" value="{{message[1][2] if message[1][2] is not none else ''}}">
                           </div>
                         </div>
                       </div>
 
                       <div class="form-group col-lg-3">
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Status</label>
-                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <select name="AR_STATUS" class="form-control form-control-sm border text-light bg-dark py-0">
-                              <option value="1" {{'selected' if message[1] == '1' else ''}}>Draft</option>
-                              <option value="2" {{'selected' if message[1] == '2' else ''}}>Active</option>
-                              <option value="3" {{'selected' if message[1] == '3' else ''}}>Closed</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Phone</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_PHONE" placeholder="Customer Phone" value="{{message[2][4] if message[2][4] is not none else '-'}}" {{'disabled' if message[1] == '3' else ''}}>
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_PHONE" placeholder="Customer Phone" value="{{message[1][3] if message[1][3] is not none else ''}}">
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Email</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_EMAIL" placeholder="Customer Email" value="{{message[2][5] if message[2][5] is not none else '-'}}" {{'disabled' if message[1] == '3' else ''}}>
+                            <input type="text" min="0" class="form-control form-control-sm text-light bg-dark" name="AR_EMAIL" placeholder="Customer Email" value="{{message[1][4] if message[1][4] is not none else ''}}">
                           </div>
                         </div>
                       </div>
@@ -92,14 +81,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[2][8] if message[2][8] is not none else '-'}} / ({{message[2][6] if message[2][6] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][7] if message[1][7] is not none else '-'}} / ({{message[1][5] if message[1][5] is not none else '-'}})" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[2][9] if message[2][9] is not none else '-'}} / ({{message[2][7] if message[2][7] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][8] if message[1][8] is not none else '-'}} / ({{message[1][6] if message[1][6] is not none else '-'}})" disabled>
                           </div>
                         </div>
                       </div>

@@ -3,12 +3,12 @@ from model import Model
 from user import User
 from datetime import datetime, date
 
-class Customer(object):
+class Supplier(object):
     User = User()
     Model = Model()
     
     def __init__(self):
-        super(Customer, self).__init__()
+        super(Supplier, self).__init__()
 
     def add(self, name, address, phone, email):
         session_id = self.User.get_session_id()
@@ -19,30 +19,30 @@ class Customer(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'AR','_CREATE')
+        access_permission = self.User.is_allowed(session_id,'AP','_CREATE')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('index'))
 
 
         # Get User Count
-        row_len = self.Model.read('ar01')
+        row_len = self.Model.read('ap01')
         row_len = len(row_len) + 1 if row_len else '1'
 
         self.Model.insert(
-            'ar01', 
+            'ap01', 
             {
-                'AR_ID':f'CS-{row_len}',
-                'AR_NAME':name if bool(name) else f'CS-{row_len}',
-                'AR_ADDRESS':address,
-                'AR_PHONE':phone if phone else 0,
-                'AR_EMAIL':email,
+                'AP_ID':f'SP-{row_len}',
+                'AP_NAME':name if bool(name) else f'SP-{row_len}',
+                'AP_ADDRESS':address,
+                'AP_PHONE':phone if phone else 0,
+                'AP_EMAIL':email,
                 'CRTD_DT':datetime.date(datetime.now()),
                 'CRTD_BY':session_id
             }
         )
 
-        return redirect(url_for('customer'))
+        return redirect(url_for('supplier'))
 
     def read(self, id=None):
         session_id = self.User.get_session_id()
@@ -53,7 +53,7 @@ class Customer(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'AR','_READ')
+        access_permission = self.User.is_allowed(session_id,'AP','_READ')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('index'))
@@ -62,26 +62,25 @@ class Customer(object):
 
         if id is None:
             # All Users
-            data = self.Model.read('ar01',['AR_ID','AR_NAME','AR_ADDRESS'])
-            return_path = 'customer/index.html'
+            data = self.Model.read('ap01',['AP_ID','AP_NAME','AP_ADDRESS'])
+            return_path = 'supplier/index.html'
         else:
             data.append(id)
 
             # Check if Exists
-            db_ret = self.Model.read('ar01',['AR_ID'],{'AR_ID':id})
+            db_ret = self.Model.read('ap01','*',{'AP_ID':id})
 
             if db_ret == []:
                 flash('ID Not Found')
-                return redirect(url_for('customer'))
+                return redirect(url_for('supplier'))
 
-            db_ret = self.Model.read('ar01','*',{'AR_ID':id})
             # Append Summary
             (*summary,) = db_ret[0]
             data.append(summary)
 
             # Append Details
-            data.append(self.Model.read('iv11','*',{'IV_CUSTOMERID':id}))
-            return_path = 'customer/detail.html'
+            data.append(self.Model.read('po11','*',{'PO_CUSTOMERID':id}))
+            return_path = 'supplier/detail.html'
 
         return render_template(return_path, message=data)
 
@@ -94,30 +93,30 @@ class Customer(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'AR','_UPDATE')
+        access_permission = self.User.is_allowed(session_id,'AP','_UPDATE')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('index'))
 
         # Check if ID Exists
-        db_ret = self.Model.read('ar01', ['AR_ID'],{'AR_ID':id})
+        db_ret = self.Model.read('ap01', ['AP_ID'],{'AP_ID':id})
         if db_ret == []:
             flash('ID Not Found')
-            return redirect(url_for('customer'))
+            return redirect(url_for('supplier'))
 
         # Update New Value
-        self.Model.update('ar01',
+        self.Model.update('ap01',
             {
-                'AR_NAME':name if bool(name) else id,
-                'AR_ADDRESS':address,
-                'AR_PHONE':phone if bool(phone) else 0,
-                'AR_EMAIL':email,
+                'AP_NAME':name if bool(name) else id,
+                'AP_ADDRESS':address,
+                'AP_PHONE':phone if bool(phone) else 0,
+                'AP_EMAIL':email,
                 'UPDT_DT':datetime.date(datetime.now()),
                 'UPDT_BY':session_id
             },
-            {'AR_ID':id}
+            {'AP_ID':id}
         )
 
-        return redirect(url_for('customer'))
+        return redirect(url_for('supplier'))
 
 # End Class/Method

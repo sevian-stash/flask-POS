@@ -31,7 +31,7 @@ class User(object):
             'us01',
             {   
                 'US_ID':f'US-{row_len}',
-                'US_NAME':user,
+                'US_NAME':user if bool(user) else f'US-{row_len}',
                 'US_PASSWORD':hashed_pass,
                 'US_ACTIVE':bool(True),
                 'CRTD_DT':datetime.date(datetime.now()),
@@ -67,7 +67,7 @@ class User(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.is_allowed(session_id,'_READ')
+        access_permission = self.is_allowed(session_id,'US','_READ')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('index'))
@@ -86,18 +86,17 @@ class User(object):
             # Check if Exists
             db_ret = self.Model.read('us01','*',{'US_ID':id})
 
-            if db_ret != []:
-                # Append Summary
-                (*summary,) = db_ret[0]
-                data.append(summary)
-
-                # Append Details
-                data.append(self.Model.read('us02','*',{'US_ID':id}))
-                return_path = 'user/detail.html'
-
-            else:
+            if db_ret == []:
                 flash('ID Not Found')
                 return redirect(url_for('user'))
+
+            # Append Summary
+            (*summary,) = db_ret[0]
+            data.append(summary)
+
+            # Append Details
+            data.append(self.Model.read('us02','*',{'US_ID':id}))
+            return_path = 'user/detail.html'
 
         return render_template(return_path, message=data)
 
@@ -110,7 +109,7 @@ class User(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.is_allowed(session_id,'_UPDATE')
+        access_permission = self.is_allowed(session_id,'US','_UPDATE')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('user'))
@@ -122,7 +121,7 @@ class User(object):
 
             if old_username != new_username:
                 self.Model.update('us01',
-                    {'US_NAME':new_username, 'UPDT_BY':session_id, 'UPDT_DT':datetime.date(datetime.now())},
+                    {'US_NAME':new_username if bool(new_username) else id, 'UPDT_BY':session_id, 'UPDT_DT':datetime.date(datetime.now())},
                     {'US_ID':id})
 
             # Get Current Permission
@@ -197,7 +196,7 @@ class User(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.is_allowed(session_id,'_DELETE')
+        access_permission = self.is_allowed(session_id,'US','_DELETE')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('user'))
@@ -221,7 +220,7 @@ class User(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.is_allowed(session_id,'_CREATE')
+        access_permission = self.is_allowed(session_id,'US','_CREATE')
         if not access_permission:
             flash("No Access Allowed")
             return redirect(url_for('user'))
@@ -258,8 +257,8 @@ class User(object):
 
         return id.decode('utf-8')
 
-    def is_allowed(self, id, permission):
-        (*permission_status,) = self.Model.read('us02', [f'US{permission.capitalize()}'],{'US_ID':id})[0]
+    def is_allowed(self, id, module_id, permission):
+        (*permission_status,) = self.Model.read('us02', [f'US{permission.upper()}'],{'US_ID':id})[0]
         permission_status = permission_status[0]
 
         return bool(permission_status)
@@ -269,3 +268,5 @@ class User(object):
         active_status = active_status[0]
 
         return bool(active_status)
+
+# End Class/Method

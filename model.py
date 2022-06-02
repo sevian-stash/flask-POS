@@ -67,7 +67,7 @@ class Model(object):
 
 			# Get Reference for Update
 			id = list(new_value.values())[0]
-			module_id = (list(new_value.values())[0][0:2]).upper()
+			module_id = (table[0:2]).upper()
 
 			cursor.execute(f"INSERT INTO {table} ({insert_column}) VALUES (%s)",(insert_value,))
 			self.sql.commit()

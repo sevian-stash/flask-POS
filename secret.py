@@ -1,7 +1,7 @@
 import bcrypt as crypt
 
 class Secret(object):
-	"""docstring for Secret"""
+
 	def __init__(self):
 		super(Secret, self).__init__()
 

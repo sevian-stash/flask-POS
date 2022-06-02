@@ -18,23 +18,23 @@
       <div class="main-panel">
         <div class="content-wrapper">
 
-          <div class="page-header">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="/Supplier/">Supplier</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{message[0]}}</li>
-              </ol>
-            </nav>
-            <h3 class="page-title"> <b><i> {{message[0]}} </i></b> Supplier Details </h3>
-          </div>
-          <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
-          <form action="/supplier/update/" method="POST" id="supplier-form">
+          <form action="/supplier/add/" method="POST" id="supplier-form">
+            <div class="page-header">
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/">Home</a></li>
+                  <li class="breadcrumb-item"><a href="/supplier/">Supplier</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Add</li>
+                </ol>
+              </nav>
+              <h3 class="page-title"> Add New Supplier </h3>
+            </div>
+            <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <div class="card-title text-right">
-                    <button class="btn btn-success">Save</button>
+                    <button class="btn btn-success">Add</button>
                   </div>
                   <div class="card-description col-lg-12">
                     <div class="row">
@@ -42,21 +42,21 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" name="AP_ID" value="{{message[0]}}" readonly>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name*</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AP_NAME" placeholder="Supplier Name" value="{{message[1][1] if message[1][1] is not none else ''}}">
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AP_NAME" placeholder="Supplier Name" required>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Address</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AP_ADDRESS" placeholder="Supplier Address" value="{{message[1][2] if message[1][2] is not none else ''}}">
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AP_ADDRESS" placeholder="Supplier Address">
                           </div>
                         </div>
                       </div>
@@ -65,14 +65,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Phone</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AP_PHONE" placeholder="Supplier Phone" value="{{message[1][3] if message[1][3] is not none else ''}}">
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="AP_PHONE" placeholder="Supplier Phone">
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Email</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" min="0" class="form-control form-control-sm text-light bg-dark" name="AP_EMAIL" placeholder="Supplier Email" value="{{message[1][4] if message[1][4] is not none else ''}}">
+                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="AP_EMAIL" placeholder="Supplier Email">
                           </div>
                         </div>
                       </div>
@@ -81,14 +81,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][7] if message[1][7] is not none else '-'}} / ({{message[1][5] if message[1][5] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][8] if message[1][8] is not none else '-'}} / ({{message[1][6] if message[1][6] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" disabled>
                           </div>
                         </div>
                       </div>
@@ -97,49 +97,9 @@
                   </div>
                 </div>
               </div>
-            </div>    
-          </form>
-          <!-- End Summary Row -->
-
-          <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-              <div class="card-body">
-                <div class="card-title text-right">
-                  <p class="text-light">All Transaction(s)</p>
-                </div>
-                <div class="table-responsive ">
-                  <table class="table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th class="text-primary"><b> SO ID </b></th>
-                        <th class="text-primary"><b> Date </b></th>
-                        <th class="text-primary"><b> Quantity </b></th>
-                        <th class="text-primary"><b> Price </b></th>
-                        <th class="text-primary"><b> Total Amount </b></th>
-                        <th class="text-primary"><b> Created Info. </b></th>
-                        <th class="text-primary"><b> Updated Info. </b></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for i in range(3) %}
-                      <tr>
-                        <td> GRN-{{i}} </td>
-                        <td> {{i}}{{i}}/{{i}}{{i}}/{{i}}{{i}}{{i}}{{i}} </td>
-                        <td> {{i}} </td>
-                        <td> $ 999{{i}}.00 </td>
-                        <td> $ 999{{i}}.00 </td>
-                        <td> Date&By-{{i}} </td>
-                        <td> Date&By-{{i}} </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <!-- End Table Card -->
-          </div>
-          <!-- End Table Row -->
+              <!-- End Summary Row -->
+            </div>                    
+          </form>  
         </div>
       </div>
     </div>

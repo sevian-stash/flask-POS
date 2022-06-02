@@ -1,6 +1,7 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
 from user import User
 from customer import Customer
+from supplier import Supplier
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0'
 # Create the object first
 User = User()
 Customer = Customer()
+Supplier = Supplier()
 
 # Start Class/Method
 
@@ -150,31 +152,6 @@ class Inventory(object):
     def delete():
         return
 
-class Supplier(object):
-    
-    def __init__(self):
-        super(Supplier, self).__init__()
-
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
-
-
 # Start Route
 
 @app.route("/")
@@ -215,7 +192,7 @@ def transaction_add():
     return IV_Transaction.add()
 
 @app.route("/transaction/read/<id>/")
-def transaction_read(id=None):
+def transaction_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -253,7 +230,7 @@ def account_receivable_add():
     return Account_Receivable.add()
 
 @app.route("/account_receivable/read/<id>/")
-def account_receivable_read(id=None):
+def account_receivable_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -292,7 +269,7 @@ def account_payable_add():
     return Account_Payable.add()
 
 @app.route("/account_payable/read/<id>/")
-def account_payable_read(id=None):
+def account_payable_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -331,7 +308,7 @@ def purchase_order_add():
     return Purchase_Order.add()
 
 @app.route("/purchase_order/read/<id>/")
-def purchase_order_read(id=None):
+def purchase_order_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -369,7 +346,7 @@ def purchase_receiving_add():
     return Purchase_Receiving.add()
 
 @app.route("/purchase_receiving/read/<id>/")
-def purchase_receiving_read(id=None):
+def purchase_receiving_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -407,7 +384,7 @@ def inventory_add():
     return Inventory.add()
 
 @app.route("/inventory/read/<id>/")
-def inventory_read(id=None):
+def inventory_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
@@ -436,36 +413,44 @@ def supplier():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('supplier/index.html')
+    return Supplier.read()
 
-@app.route("/supplier/add/")
+@app.route("/supplier/add/", methods = ["POST","GET"])
 def supplier_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Supplier.add()
+    if request.method == 'GET':
+        return render_template('supplier/add.html')
 
-@app.route("/supplier/read/<id>/")
-def supplier_read(id=None):
+    name = escape(request.form.get('AP_NAME'))
+    address = escape(request.form.get('AP_ADDRESS'))
+    phone = escape(request.form.get('AP_PHONE'))
+    email = escape(request.form.get('AP_EMAIL'))
+
+    return Supplier.add(name, address, phone, email)
+
+@app.route("/supplier/read/", methods = ["POST"])
+def supplier_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('supplier/detail.html')
-    # return Supplier.read(id)
+    id = escape(request.form['search_id'])
 
-@app.route("/supplier/update/")
+    return Supplier.read(id)
+
+@app.route("/supplier/update/", methods = ["POST"])
 def supplier_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Supplier.update()
+    id = escape(request.form.get('AP_ID'))
+    name = escape(request.form.get('AP_NAME'))
+    address = escape(request.form.get('AP_ADDRESS'))
+    phone = escape(request.form.get('AP_PHONE'))
+    email = escape(request.form.get('AP_EMAIL'))
 
-@app.route("/supplier/delete/")
-def supplier_delete():
-    if not User.is_logged_in():
-        return redirect(url_for('login'))
-
-    return Supplier.delete()
+    return Supplier.update(id, name, address, phone, email)
 
 # End Supplier Route
 # Customer Route
@@ -488,16 +473,16 @@ def customer_add():
     name = escape(request.form.get('AR_NAME'))
     address = escape(request.form.get('AR_ADDRESS'))
     phone = escape(request.form.get('AR_PHONE'))
-    status = escape(request.form.get('AR_STATUS'))
+    email = escape(request.form.get('AR_EMAIL'))
 
-    return Customer.add(name, address, phone, status)
+    return Customer.add(name, address, phone, email)
 
 @app.route("/customer/read/", methods = ["POST"])
-def customer_read(id=None):
+def customer_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    id = escape(request.form['search_id']) if request.form['search_id'] else None
+    id = escape(request.form['search_id'])
 
     return Customer.read(id)
 
@@ -506,20 +491,13 @@ def customer_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    name = escape(request.form['AR_NAME'])
-    address = escape(request.form['AR_ADDRESS'])
-    status = escape(request.form['AR_STATUS'])
-    phone = escape(request.form['AR_PHONE'])
-    email = escape(request.form['AR_EMAIL'])
+    id = escape(request.form.get('AR_ID'))
+    name = escape(request.form.get('AR_NAME'))
+    address = escape(request.form.get('AR_ADDRESS'))
+    phone = escape(request.form.get('AR_PHONE'))
+    email = escape(request.form.get('AR_EMAIL'))
 
-    return Customer.update()
-
-@app.route("/customer/delete/")
-def customer_delete():
-    if not User.is_logged_in():
-        return redirect(url_for('login'))
-
-    return Customer.delete()
+    return Customer.update(id, name, address, phone, email)
 
 # End Customer Route
 # User Route
@@ -586,7 +564,6 @@ def user_update_password():
     password = request.form['US_PASSWORD']
 
     return User.update(id,None,None,password)
-
 
 @app.route("/user/deactivate/", methods = ["POST"])
 def user_deactivate():
