@@ -3,6 +3,7 @@ from user import User
 from customer import Customer
 from supplier import Supplier
 from inventory import Inventory
+from purchase_order import Purchase_Order
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -13,6 +14,7 @@ User = User()
 Customer = Customer()
 Supplier = Supplier()
 Inventory = Inventory()
+Purchase_Order = Purchase_Order()
 
 # Start Class/Method
 
@@ -66,29 +68,6 @@ class Account_Payable(object):
 
     def __init__(self):
         super(Account_Payable, self).__init__()
-    
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
-class Purchase_Order(object):
-
-    def __init__(self):
-        super(Purchase_Order, self).__init__()
     
     def add():
         return 
@@ -278,28 +257,85 @@ def purchase_order():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('')
+    return Purchase_Order.read()
 
-@app.route("/purchase_order/add/")
+@app.route("/purchase_order/add/", methods = ["POST","GET"])
 def purchase_order_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Order.add()
+    loop_len = 200
 
-@app.route("/purchase_order/read/<id>/")
+    if request.method == 'GET':
+        return render_template('purchase_order/add.html', message=loop_len)
+
+    data = dict()
+
+    # Summary
+    data.update({'po11': {
+        'PO_CUSTOMERID': escape(request.form.get('PO_CUSTOMERID')),
+        'PO_QTY': escape(request.form.get('PO_QTY')),
+        'PO_AMOUNT': escape(request.form.get('PO_AMOUNT')),
+        'PO_STATUS': escape(request.form.get('PO_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'po12': {}})
+    for i in range(loop_len):
+        if bool(request.form.get(f'IV_ID_{i}')):
+            data['po12'].update({f'row_{i}': {
+                f'PO_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                f'PO_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                f'PO_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                f'PO_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+    return Purchase_Order.add(data)
+
+@app.route("/purchase_order/read/", methods = ["POST"])
 def purchase_order_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
+    id = escape(request.form['search_id'])
+
     return Purchase_Order.read(id)
 
-@app.route("/purchase_order/update/")
+@app.route("/purchase_order/update/", methods = ["POST"])
 def purchase_order_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Order.update()
+    loop_len = 200
+    data = dict()
+
+    # Summary
+    data.update({'po11': {
+        'PO_ID': escape(request.form.get('PO_ID')),
+        'PO_CUSTOMERID': escape(request.form.get('PO_CUSTOMERID')),
+        'PO_QTY': escape(request.form.get('PO_QTY')),
+        'PO_AMOUNT': escape(request.form.get('PO_AMOUNT')),
+        'PO_STATUS': escape(request.form.get('PO_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'po12': {}})
+    for i in range(loop_len):
+        if request.form[f'IV_ID_{i}']:
+            data['po12'].update({f'row_{i}': {
+                'PO_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                'PO_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                'PO_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                'PO_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+    print(data['po12'])
+
+    return Purchase_Order.update(data)
 
 @app.route("/purchase_order/delete/")
 def purchase_order_delete():
@@ -367,10 +403,11 @@ def inventory_add():
     name = escape(request.form.get('IV_NAME'))
     category = escape(request.form.get('IV_CATEGORY'))
     qty = escape(request.form.get('IV_QTY'))
-    amount = escape(request.form.get('IV_AMOUNT'))
+    buy_price = escape(request.form.get('IV_BUYPRICE'))
+    sell_price = escape(request.form.get('IV_SELLPRICE'))
     uom = escape(request.form.get('IV_UOM'))
 
-    return Inventory.add(name, category, qty, amount, uom)
+    return Inventory.add(name, category, qty, buy_price, sell_price, uom)
 
 @app.route("/inventory/read/", methods = ["POST"])
 def inventory_read():
@@ -391,18 +428,29 @@ def inventory_update():
     name = escape(request.form.get('IV_NAME'))
     category = escape(request.form.get('IV_CATEGORY'))
     qty = escape(request.form.get('IV_QTY'))
-    amount = escape(request.form.get('IV_AMOUNT'))
+    buy_price = escape(request.form.get('IV_BUYPRICE'))
+    sell_price = escape(request.form.get('IV_SELLPRICE'))
     uom = escape(request.form.get('IV_UOM'))
 
-    return Inventory.update(id, name, category, qty, amount, uom)
+    return Inventory.update(id, name, category, qty, buy_price, sell_price, uom)
 
-@app.route("/inventory/delete/")
-def inventory_delete():
+@app.route("/inventory/deactivate/", methods = ["POST"])
+def inventory_deactivate():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Inventory.delete()
+    id = escape(request.form.get('IV_ID'))
 
+    return Inventory.deactivate(id)
+
+@app.route("/inventory/activate/", methods = ["POST"])
+def inventory_activate():
+    if not User.is_logged_in():
+        return redirect(url_for('login'))
+
+    id = escape(request.form.get('IV_ID'))
+
+    return Inventory.activate(id)
 # End Inventory Route
 # Supplier Route
 

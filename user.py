@@ -63,8 +63,8 @@ class User(object):
     def read(self, id=None):
         session_id = self.get_session_id()
         # Status Check
-        account_status = self.is_active(session_id)
-        if not account_status:
+        user_status = self.is_active(session_id)
+        if not user_status:
             flash("Account is Deactivated")
             return redirect(url_for('login'))
 
@@ -105,8 +105,8 @@ class User(object):
     def update(self, id=None, new_username=None, new_permission=None, password=None):
         session_id = self.get_session_id()
         # Status Check
-        account_status = self.is_active(session_id)
-        if not account_status:
+        user_status = self.is_active(session_id)
+        if not user_status:
             flash("Account is Deactivated")
             return redirect(url_for('login'))
 
@@ -114,6 +114,12 @@ class User(object):
         access_permission = self.is_allowed(session_id,'US','_UPDATE')
         if not access_permission:
             flash("No Access Allowed")
+            return redirect(url_for('user'))
+
+        # Account Status Check
+        account_status = self.is_active(id)
+        if not account_status:
+            flash("Account is Inactive")
             return redirect(url_for('user'))
 
         # Update User Account
@@ -129,7 +135,6 @@ class User(object):
 
             # Get Current Permission
             db_ret = self.Model.read('us02',['US_CREATE','US_READ','US_UPDATE','US_DELETE'],{'US_ID':id})
-            print(db_ret)
             current_permission = dict()
 
             for idx,item in enumerate(self.module_id):
@@ -161,7 +166,7 @@ class User(object):
                 {'US_PASSWORD':hashed_pass, 'UPDT_DT':datetime.date(datetime.now()), 'UPDT_BY':session_id},
                 {'US_ID':id})
             
-        flash('Successfully saved')
+        flash(f'{id} Successfully saved')
 
         return redirect(url_for('user'))
 
@@ -196,8 +201,8 @@ class User(object):
     def deactivate(self, id):
         session_id = self.get_session_id()
         # Status Check
-        account_status = self.is_active(session_id)
-        if not account_status:
+        user_status = self.is_active(session_id)
+        if not user_status:
             flash("Account is Deactivated")
             return redirect(url_for('login'))
 
@@ -213,15 +218,15 @@ class User(object):
         if session_id == id:
             return redirect(url_for('logout'))
         
-        flash('Account Deactivated')
+        flash(f'{id} Account Deactivated')
 
         return redirect(url_for('user'))
 
     def activate(self, id):
         session_id = self.get_session_id()
         # Status Check
-        account_status = self.is_active(session_id)
-        if not account_status:
+        user_status = self.is_active(session_id)
+        if not user_status:
             flash("Account is Deactivated")
             return redirect(url_for('login'))
 
@@ -237,7 +242,7 @@ class User(object):
         if session_id == id:
             return redirect(url_for('logout'))
         
-        flash('Account Activated')
+        flash(f'{id} Account Activated')
 
         return redirect(url_for('user'))
 

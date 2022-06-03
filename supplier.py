@@ -42,6 +42,8 @@ class Supplier(object):
             }
         )
 
+        flash(f'SP-{row_len} has been Created')
+
         return redirect(url_for('supplier'))
 
     def read(self, id=None):
@@ -116,6 +118,8 @@ class Supplier(object):
             },
             {'AP_ID':id}
         )
+
+        flash(f'{id} has been Updated')
 
         return redirect(url_for('supplier'))
 

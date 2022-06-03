@@ -14,4 +14,17 @@
     document.querySelector('[name="search_id"]').value = $(this).attr('id');
   });
 
+  let delete_btn = document.querySelector('#inventory-deactivate');
+
+  if(delete_btn){
+    delete_btn.addEventListener('click', function(event){
+      event.stopPropagation();
+
+      if (!confirm('Deactivate Item?')){ return 0; }
+      let form = document.querySelector('#inventory-form')
+      form.attributes.action.value = '/inventory/deactivate/';
+      form.submit();
+    })
+  }
+
 })(jQuery);

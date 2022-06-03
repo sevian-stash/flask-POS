@@ -42,6 +42,8 @@ class Customer(object):
             }
         )
 
+        flash(f'CS-{row_len} has been Created')
+
         return redirect(url_for('customer'))
 
     def read(self, id=None):
@@ -117,6 +119,8 @@ class Customer(object):
             },
             {'AR_ID':id}
         )
+
+        flash(f'{id} has been Updated')
 
         return redirect(url_for('customer'))
 

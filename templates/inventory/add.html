@@ -40,16 +40,42 @@
                     <div class="row">
                       <div class="form-group col-lg-3">
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
+                          <label class="col-lg-3 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">ID</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
                             <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name*</label>
+                          <label class="col-lg-3 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name*</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
                             <input type="text" class="form-control form-control-sm text-light bg-dark" name="IV_NAME" placeholder="Item Name" required>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">UoM</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_UOM">
+                              <option disabled selected>- Item UoM -</option>
+                              <option value="1">M - Meter</option>
+                              <option value="2">Pcs - Piece</option>
+                              <option value="3">Ml - Mililiter</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Category</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_CATEGORY">
+                              <option disabled selected>- Item Category -</option>
+                              <option value="1">Umpan</option>
+                              <option value="2">Peralatan</option>
+                              <option value="3">Lainnya</option>
+                            </select>
                           </div>
                         </div>
 
@@ -63,33 +89,16 @@
 
                       <div class="form-group col-lg-3">
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">UoM</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Buy Price</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_UOM">
-                              <option disabled selected>-</option>
-                              <option value="1">M - Meter</option>
-                              <option value="2">Pcs - Piece</option>
-                              <option value="3">Ml - Mililiter</option>
-                            </select>
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_BUYPRICE" placeholder="Item Price">
                           </div>
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Category</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Sell Price</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_CATEGORY">
-                              <option disabled selected>-</option>
-                              <option value="1">Umpan</option>
-                              <option value="2">Peralatan</option>
-                              <option value="3">Lainnya</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Price</label>
-                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_AMOUNT" placeholder="Item Price">
+                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_SELLPRICE" placeholder="Item Price">
                           </div>
                         </div>
                       </div>

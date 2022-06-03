@@ -29,12 +29,19 @@
             <h3 class="page-title"> <b><i> {{message[0]}} </i></b> Inventory Details </h3>
           </div>
           <!-- ENABLE DATATABLES AND TEST FOR 1000 rows -->
-          <form action="/inventory/update/" method="POST" id="Inventory-form">
+          <form action="{{'/inventory/update/' if message[1][7] != 0 else '/inventory/activate/'}}" method="POST" id="inventory-form">
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <div class="card-title text-right">
-                    <button class="btn btn-success">Save</button>
+                    {% if message[1][7] != 0 %}
+                    <button type="button" class="btn btn-outline-danger" id="inventory-deactivate">Deactivate</button>
+                    <button class="btn btn-primary">Save</button>
+                    {% endif %}
+                    {% if message[1][7] == 0 %}
+                    <h3 class="font-weight-bold text-light">Item Inactive</h3>
+                    <button class="btn btn-outline-success">Activate</button>
+                    {% endif %}
                   </div>
                   <div class="card-description col-lg-12">
                     <div class="row">
@@ -49,14 +56,7 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Name</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-light bg-dark" name="IV_NAME" value="{{message[1][1]}}" required>
-                          </div>
-                        </div>
-
-                        <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Qty.</label>
-                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min='0' class="form-control form-control-sm text-light bg-dark" name="IV_QTY" value="{{message[1][3]}}">
+                            <input type="text" class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark" name="IV_NAME" value="{{message[1][1]}}" {{ 'disabled' if message[1][7] == 0 else ''}}>
                           </div>
                         </div>
                       </div>
@@ -65,10 +65,10 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">UoM</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_UOM">
-                              <option value="1" {{'selected' if message[1][5] == '1' else ''}}>M - Meter</option>
-                              <option value="2" {{'selected' if message[1][5] == '2' else ''}}>Pcs - Piece</option>
-                              <option value="3" {{'selected' if message[1][5] == '3' else ''}}>Ml - Mili liter</option>
+                            <select class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark py-0" name="IV_UOM" {{ 'disabled' if message[1][7] == 0 else ''}}>
+                              <option value="1" {{'selected' if message[1][6] == '1' else ''}}>M - Meter</option>
+                              <option value="2" {{'selected' if message[1][6] == '2' else ''}}>Pcs - Piece</option>
+                              <option value="3" {{'selected' if message[1][6] == '3' else ''}}>Ml - Mili liter</option>
                             </select>
                           </div>
                         </div>
@@ -76,7 +76,7 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Category</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <select class="form-control form-control-sm text-light bg-dark py-0" name="IV_CATEGORY">
+                            <select class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark py-0" name="IV_CATEGORY" {{ 'disabled' if message[1][7] == 0 else ''}}>
                               <option value="1" {{'selected' if message[1][2] == '1' else ''}}>Umpan</option>
                               <option value="2" {{'selected' if message[1][2] == '2' else ''}}>Peralatan</option>
                               <option value="3" {{'selected' if message[1][2] == '3' else ''}}>Lainnya</option>
@@ -85,9 +85,25 @@
                         </div>
 
                         <div class="row my-1">
-                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Price</label>
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Qty.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="number" min="0" class="form-control form-control-sm text-light bg-dark" name="IV_AMOUNT" value="{{message[1][4]}}">
+                            <input type="number" min='0' class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark" name="IV_QTY" value="{{message[1][3]}}" {{ 'disabled' if message[1][7] == 0 else ''}}>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group col-lg-3">
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Buy Price</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="number" min="0" class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark" name="IV_BUYPRICE" value="{{message[1][4]}}" {{ 'disabled' if message[1][7] == 0 else ''}}>
+                          </div>
+                        </div>
+
+                        <div class="row my-1">
+                          <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Sell Price</label>
+                          <div class="col-lg-8 col-sm-6 pl-1 pr-2">
+                            <input type="number" min="0" class="form-control form-control-sm {{'text-muted' if message[1][7] == 0 else 'text-light'}} bg-dark" name="IV_SELLPRICE" value="{{message[1][5]}}" {{ 'disabled' if message[1][7] == 0 else ''}}>
                           </div>
                         </div>
                       </div>
@@ -96,14 +112,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][8] if message[1][8] else '-'}} / ({{message[1][6] if message[1][6] else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][10] if message[1][10] else '-'}} / ({{message[1][8] if message[1][8] else '-'}})" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][9] if message[1][9] else '-'}} / ({{message[1][7] if message[1][7] else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" value="{{message[1][11] if message[1][11] else '-'}} / ({{message[1][9] if message[1][9] else '-'}})" disabled>
                           </div>
                         </div>
                       </div>
@@ -161,6 +177,7 @@
   </div>
   <script src="{{ url_for('static', filename='assets/vendors/js/vendor.bundle.base.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/vendors/datatables/datatables.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/vendors/datatables/NaturalSort-1.2.1/NaturalSort.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
   <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
