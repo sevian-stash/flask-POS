@@ -11,7 +11,6 @@ class User(object):
         super(User, self).__init__()
         self.module_id = ['AP','AR','IV','PR','US']
         self.Model = Model()
-        [self.db, self.db_cursor] = self.Model.init()
 
     def add(self, user, password):
         # Check for Duplicate

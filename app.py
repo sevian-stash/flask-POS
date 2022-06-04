@@ -4,6 +4,7 @@ from customer import Customer
 from supplier import Supplier
 from inventory import Inventory
 from purchase_order import Purchase_Order
+from purchase_receivable import Purchase_Receivable
 from markupsafe import escape
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ Customer = Customer()
 Supplier = Supplier()
 Inventory = Inventory()
 Purchase_Order = Purchase_Order()
+Purchase_Receivable = Purchase_Receivable()
 
 # Start Class/Method
 
@@ -86,30 +88,6 @@ class Account_Payable(object):
 
     def delete():
         return
-
-class Purchase_Receiving(object):
-
-    def __init__(self):
-        super(Purchase_Receiving, self).__init__()
-    
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
 
 # Start Route
 
@@ -337,50 +315,113 @@ def purchase_order_update():
 
     return Purchase_Order.update(data)
 
-@app.route("/purchase_order/delete/")
-def purchase_order_delete():
+@app.route("/purchase_order/activate/", methods = ["POST"])
+def purchase_order_activate():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Order.delete()
+    id = escape(request.form['PO_ID'])
+
+    return Purchase_Order.activate(id)
 
 # End PO Transaction Route
 # Purchase Receiving (GRN) Route
 
-@app.route("/purchase_receiving/")
-def purchase_receiving():
+@app.route("/purchase_receivable/")
+def purchase_receivable():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('')
+    return Purchase_Receivable.read()
 
-@app.route("/purchase_receiving/add/")
-def purchase_receiving_add():
+@app.route("/purchase_receivable/add/", methods = ["POST","GET"])
+def purchase_receivable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Receiving.add()
+    loop_len = 200
 
-@app.route("/purchase_receiving/read/<id>/")
-def purchase_receiving_read():
+    if request.method == 'GET':
+        return render_template('purchase_receivable/add.html', message=loop_len)
+
+    data = dict()
+
+    # Summary
+    data.update({'pr11': {
+        'PR_PURCHASEORDERID': escape(request.form.get('PR_PURCHASEORDERID')),
+        'PR_CUSTOMERID': escape(request.form.get('PR_CUSTOMERID')),
+        'PR_QTY': escape(request.form.get('PR_QTY')),
+        'PR_AMOUNT': escape(request.form.get('PR_AMOUNT')),
+        'PR_STATUS': escape(request.form.get('PR_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'pr12': {}})
+    for i in range(loop_len):
+        if bool(request.form.get(f'IV_ID_{i}')):
+            data['pr12'].update({f'row_{i}': {
+                f'PR_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                f'PR_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                f'PR_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                f'PR_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+    return Purchase_Receivable.add(data)
+
+@app.route("/purchase_receivable/read/", methods = ["POST"])
+def purchase_receivable_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Receiving.read(id)
+    id = escape(request.form['search_id'])
 
-@app.route("/purchase_receiving/update/")
-def purchase_receiving_update():
+    return Purchase_Receivable.read(id)
+
+@app.route("/purchase_receivable/update/", methods = ["POST"])
+def purchase_receivable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Receiving.update()
+    loop_len = 200
+    data = dict()
 
-@app.route("/purchase_receiving/delete/")
-def purchase_receiving_delete():
+    # Summary
+    data.update({'pr11': {
+        'PR_ID': escape(request.form.get('PR_ID')),
+        'PR_PURCHASEORDERID': escape(request.form.get('PR_PURCHASEORDERID')),
+        'PR_CUSTOMERID': escape(request.form.get('PR_CUSTOMERID')),
+        'PR_QTY': escape(request.form.get('PR_QTY')),
+        'PR_AMOUNT': escape(request.form.get('PR_AMOUNT')),
+        'PR_STATUS': escape(request.form.get('PR_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'pr12': {}})
+    for i in range(loop_len):
+        if request.form[f'IV_ID_{i}']:
+            data_len = len(data['pr12'])
+            data['pr12'].update({f'row_{data_len}': {
+                'PR_ID': escape(request.form.get('PR_ID')),
+                'PR_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                'PR_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                'PR_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                'PR_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+    return Purchase_Receivable.update(data)
+
+@app.route("/purchase_receivable/activate/", methods = ["POST"])
+def purchase_receivable_activate():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Purchase_Receiving.delete()
+    id = escape(request.form['PR_ID'])
+
+    return Purchase_Receivable.activate(id)
 
 # End Purchase Receiving (GRN) Route
 # Inventory Route
