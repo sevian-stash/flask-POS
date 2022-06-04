@@ -126,6 +126,7 @@ class Model(object):
 			
 		try:
 			self.sql.commit()
+			print(cursor.statement)
 			cursor.close()
 		except MySQL.Error as e:
 			print(e)

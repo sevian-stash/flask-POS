@@ -325,15 +325,15 @@ def purchase_order_update():
     data.update({'po12': {}})
     for i in range(loop_len):
         if request.form[f'IV_ID_{i}']:
-            data['po12'].update({f'row_{i}': {
+            data_len = len(data['po12'])
+            data['po12'].update({f'row_{data_len}': {
+                'PO_ID': escape(request.form.get('PO_ID')),
                 'PO_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
                 'PO_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
                 'PO_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
                 'PO_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
                 }
             })
-
-    print(data['po12'])
 
     return Purchase_Order.update(data)
 

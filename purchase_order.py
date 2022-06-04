@@ -100,7 +100,7 @@ class Purchase_Order(object):
             # All Users
             data = self.Model.read(
                 'po11 po LEFT JOIN ap01 ap ON po.PO_CUSTOMERID = ap.AP_ID',
-                ['po.PO_ID','ap.AP_NAME','po.PO_AMOUNT', 'po.PO_STATUS'])
+                ['po.PO_ID','ap.AP_NAME','po.PO_AMOUNT', 'po.CRTD_DT'])
 
             return_path = 'purchase_order/index.html'
 
@@ -151,9 +151,9 @@ class Purchase_Order(object):
         model_status = self.Model.update('po11',
             {
                 'PO_CUSTOMERID':data['po11']['PO_CUSTOMERID'],
-                'PO_QTY':data['po11']['PO_QTY'],
-                'PO_AMOUNT':data['po11']['PO_AMOUNT'],
-                'PO_STATUS':data['po11']['PO_STATUS'],
+                'PO_QTY': data['po11']['PO_QTY'] if bool(data['po11']['PO_QTY']) else 0,
+                'PO_AMOUNT': data['po11']['PO_AMOUNT'] if bool(data['po11']['PO_AMOUNT']) else 0,
+                'PO_STATUS': data['po11']['PO_STATUS'] if str(data['po11']['PO_STATUS']) != 'None' else '1',
                 'UPDT_DT':datetime.date(datetime.now()),
                 'UPDT_BY':session_id
             },
@@ -170,25 +170,27 @@ class Purchase_Order(object):
             flash('Failed to Save')
             return redirect(url_for('purchase_order'))
 
-        for i in range(self.detail_row_len):
-            print(data['po12'][f'row_{i}'])
-            model_status = self.Model.update('po12',
+        # print(data['po12'])
+        for item in data['po12']:
+            # print(data['po12'][item])
+            # pass
+            model_status = self.Model.insert('po12',
                 {
-                    'PO_ITEMID':data['po12'][f'row_{i}']['PO_ITEMID'],
-                    'PO_ITEMNAME':data['po12'][f'row_{i}']['PO_ITEMNAME'],
-                    'PO_ITEMQTY':data['po12'][f'row_{i}']['PO_ITEMQTY'],
-                    'PO_ITEMPRICE':data['po12'][f'row_{i}']['PO_ITEMPRICE'],
+                    'PO_ID':data['po12'][item]['PO_ID'],
+                    'PO_ITEMID':data['po12'][item]['PO_ITEMID'],
+                    'PO_ITEMNAME':data['po12'][item]['PO_ITEMNAME'],
+                    'PO_ITEMPRICE': data['po12'][item]['PO_ITEMPRICE'] if bool(data['po12'][item]['PO_ITEMPRICE']) else 0,
+                    'PO_ITEMQTY': data['po12'][item]['PO_ITEMQTY'] if bool(data['po12'][item]['PO_ITEMQTY']) else 0,
                     'UPDT_DT':datetime.date(datetime.now()),
                     'UPDT_BY':session_id
-                },
-                {'PO_ID':data['po11']['PO_ID']}
+                }
             )
 
             if model_status != 0:
                 flash('Failed to Save')
 
         if model_status == 0:
-            flash(f'{id} has been Updated')
+            flash(f'{data["po11"]["PO_ID"]} has been Updated')
 
         return redirect(url_for('purchase_order'))
 
