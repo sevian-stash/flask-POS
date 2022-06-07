@@ -1,11 +1,13 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from model import Model
 from user import User
-from datetime import datetime, date
+from account_payable import Account_Payable
+from datetime import datetime, date, timedelta
 
 class Purchase_Order(object):
     User = User()
     Model = Model()
+    Account_Payable = Account_Payable()
 
     def __init__(self):
         super(Purchase_Order, self).__init__()
@@ -22,8 +24,8 @@ class Purchase_Order(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'PO','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_order'))
 
         # Supplier Check
         supplier = self.Model.read('ap01', ['AP_ID'], {'AP_ID':data['po11']['PO_CUSTOMERID']})
@@ -67,8 +69,8 @@ class Purchase_Order(object):
                         'PO_ITEMNAME': data['po12'][key]['PO_ITEMNAME'],
                         'PO_ITEMPRICE': data['po12'][key]['PO_ITEMPRICE'] if bool(data['po12'][key]['PO_ITEMPRICE']) else 0,
                         'PO_ITEMQTY': data['po12'][key]['PO_ITEMQTY'] if bool(data['po12'][key]['PO_ITEMQTY']) else 0,
-                        'CRTD_DT':datetime.date(datetime.now()),
-                        'CRTD_BY':session_id
+                        'UPDT_DT':datetime.date(datetime.now()),
+                        'UPDT_BY':session_id
                     }
                 )
 
@@ -78,7 +80,7 @@ class Purchase_Order(object):
 
         flash(f'PO-{row_len} has been Created')
 
-        return redirect(url_for('purchase_order'))
+        return self.account_payable_add(f'PO-{row_len}', data)
 
     def read(self, id=None):
         session_id = self.User.get_session_id()
@@ -91,7 +93,7 @@ class Purchase_Order(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'PO','_READ')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         data = []
@@ -137,8 +139,8 @@ class Purchase_Order(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'PO','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_order'))
 
         # Check if ID Exists
         db_ret = self.Model.read('po11', ['PO_ID'],{'PO_ID':data['po11']['PO_ID']})
@@ -201,8 +203,8 @@ class Purchase_Order(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'PO','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_order'))
 
         # Check if ID Exists
         db_ret = self.Model.read('po11', ['PO_ID'],{'PO_ID':id})
@@ -224,5 +226,44 @@ class Purchase_Order(object):
             flash('Failed to Save')
             return redirect(url_for('purchase_order'))
 
+        flash(f'{id} Activated')
+
         return redirect(url_for('purchase_order'))
 
+    # Sync with AP
+    def account_payable_add(self, id, data):
+        # Get User Count
+        row_len = self.Model.read('ar11')
+        row_len = len(row_len) + 1 if row_len else '1'
+
+        ap_data = dict()
+
+        print(id)
+        # Insert Summary
+        ap_duedt = datetime.date(datetime.now() + timedelta(days=7))
+        ap_duedt = datetime.strptime(str(ap_duedt),'%Y-%m-%d').strftime('%d/%m/%Y')
+        ap_data.update({'ap11':
+            {
+                'AP_CUSTOMERID': data['po11']['PO_CUSTOMERID'],
+                'AP_PURCHASEORDERID': id,
+                'AP_AMOUNT': data['po11']['PO_AMOUNT'] if bool(data['po11']['PO_AMOUNT']) else 0,
+                'AP_QTY': data['po11']['PO_QTY'] if bool(data['po11']['PO_QTY']) else 0,
+                'AP_STATUS': '2',
+                'AP_DUEDT': ap_duedt
+            }
+        })
+
+        # Insert Detail
+        ap_data.update({'ap12': {}})
+        for idx,key in enumerate(data['po12']):
+            ap_data['ap12'].update({f'row_{idx}': {
+                'AP_ITEMID':data['po12'][key]['PO_ITEMID'],
+                'AP_ITEMNAME':data['po12'][key]['PO_ITEMNAME'],
+                'AP_ITEMQTY':data['po12'][key]['PO_ITEMPRICE'] if bool(data['po12'][key]['PO_ITEMPRICE']) else 0,
+                'AP_ITEMPRICE':data['po12'][key]['PO_ITEMQTY'] if bool(data['po12'][key]['PO_ITEMQTY']) else 0
+                }
+            })
+
+        self.Account_Payable.add(ap_data)
+
+        return redirect(url_for('purchase_order'))

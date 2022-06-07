@@ -71,7 +71,7 @@
                         {% for row in message %}
                         <tr class="text-light" id="{{row[0]}}">
                           {% for item in row %}
-                          <td>{{item}}</td>
+                          <td>{{item|currency if item|int else item }}</td>
                           {% endfor %}
                         </tr>
                         {% endfor %}

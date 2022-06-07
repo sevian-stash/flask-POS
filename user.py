@@ -9,7 +9,7 @@ class User(object):
     
     def __init__(self):
         super(User, self).__init__()
-        self.module_id = ['AP','AR','IV','PR','US']
+        self.module_id = ['AP','AR','IV','PO','PR','SO','US']
         self.Model = Model()
 
     def add(self, user, password):
@@ -70,7 +70,7 @@ class User(object):
         # Access Check
         access_permission = self.is_allowed(session_id,'US','_READ')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         return_path = ''
@@ -112,7 +112,7 @@ class User(object):
         # Access Check
         access_permission = self.is_allowed(session_id,'US','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('user'))
 
         # Account Status Check
@@ -125,7 +125,6 @@ class User(object):
         if password is None:
             # Only Update if Changed
             old_username = self.Model.read('us01',['US_NAME'],{'US_ID':id})[0][0]
-            print(old_username)
 
             if old_username != new_username:
                 self.Model.update('us01',
@@ -137,7 +136,6 @@ class User(object):
             current_permission = dict()
 
             for idx,item in enumerate(self.module_id):
-                print(db_ret[idx])
                 current_permission.update({item:{
                         '_CREATE':bool(db_ret[idx][0]),
                         '_READ':bool(db_ret[idx][1]),
@@ -146,9 +144,11 @@ class User(object):
                     }
                 })
 
+            print(current_permission)
+            print(new_permission)
+
             for module_id in new_permission:
                 for module_status in new_permission[module_id].items():
-                    # Only Update if Changed
                     if current_permission[module_id][module_status[0]] != new_permission[module_id][module_status[0]]:
                         self.Model.update('us02',
                             {f'US{module_status[0]}':int(module_status[1]), 'UPDT_BY':session_id, 'UPDT_DT':datetime.date(datetime.now())},
@@ -171,7 +171,6 @@ class User(object):
 
     def login(self, user, password):
         # Check if registered
-        print(self.Model.read('us01', ['US_ID','US_PASSWORD','US_ACTIVE'], {'US_NAME':user}))
         db_ret = self.Model.read('us01', ['US_ID','US_PASSWORD','US_ACTIVE'], {'US_NAME':user})[0]
         if db_ret == []:
             flash('Not Registered Yet')
@@ -208,7 +207,7 @@ class User(object):
         # Access Check
         access_permission = self.is_allowed(session_id,'US','_DELETE')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('user'))
 
         self.Model.update('us01', {'US_ACTIVE':int(False)},{'US_ID':id})
@@ -232,7 +231,7 @@ class User(object):
         # Access Check
         access_permission = self.is_allowed(session_id,'US','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('user'))
 
         self.Model.update('us01', {'US_ACTIVE':int(True)},{'US_ID':id})
@@ -268,7 +267,7 @@ class User(object):
         return id.decode('utf-8')
 
     def is_allowed(self, id, module_id, permission):
-        (*permission_status,) = self.Model.read('us02', [f'US{permission.upper()}'],{'US_ID':id})[0]
+        (*permission_status,) = self.Model.read('us02', [f'US{permission.upper()}'],{'US_ID':id, 'US_MODULEID':module_id})[0]
         permission_status = permission_status[0]
 
         return bool(permission_status)

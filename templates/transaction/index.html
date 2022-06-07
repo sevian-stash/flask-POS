@@ -1,387 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Mockup</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Transaction/style.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
-  </head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Happy Pancing</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/mdi/css/materialdesignicons.min.css') }}" >
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/css/vendor.bundle.base.css') }}" >
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/Transaction/style.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/favicon.png') }}" />
+</head>
 
-  <body>
-    <div class=" container-scroller">
-      {% include "layout/_sidenav.html" %}
-      <div class="container-fluid page-body-wrapper">
-        {% include "layout/_topnav.html" %}
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Transaction</li>
-                </ol>
-              </nav>
-              <h3 class="page-title"> Transaction </h3>
-            </div>
-            <div class="row">
-              <div class="col-lg-8 grid-margin">
-                <div class="card mh-100">
-                  <div class="card-body" >
+<body>
+  <div class=" container-scroller">
+    {% include "layout/_sidenav.html" %}
+    <div class="container-fluid page-body-wrapper">
+      {% include "layout/_topnav.html" %}
+      <div class="main-panel">
+        <div class="content-wrapper">
 
-                    <!-- Item List Head -->
-                    <div class="row col-sm-12 col-md-12 col-lg-12 pb-2">
-                      <div class="col-sm-8 col-lg-8">
-                        <button class="btn btn-primary" name="new-transaction">New Transaction</button>
-                      </div>
-                      <div class="col-sm-4 col-lg-4 pr-0">
-                        <input type="text" class="form-control form-control-sm rounded-pill" name="transaction-item-search" placeholder="Search Item...">
-                      </div>
-                    </div>
-                    <!-- Item List Head -->
-
-                    <!-- Item List Body -->
-                    <div class="items-list overflow-auto pr-2" style="height: 60vh;">
-                      <p class="col-12 mb-0 mt-4" name="item-list-category">Umpan</p>
-                      <div class="icons-list d-block text-nowrap overflow-auto border-0">
-                        
-                        <div class="container-fluid col-12 border-0 p-0" name="item-list-container">
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item1" data-name="transaction-item1" data-price="10000">
-                            <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item1-collapsible" aria-expanded="false" aria-controls="item1-collapsible">
-                              <div class="card-body p-0">
-                                <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                <p class="card-text">Rp.10,000</p>
-                              </div>
-                              <div class="collapse" id="item1-collapsible">
-                                <div class="card card-body p-1">
-                                  <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                         <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item2" data-name="transaction-item2" data-price="12000">
-                            <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item2-collapsible" aria-expanded="false" aria-controls="item2-collapsible">
-                              <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.12,000</p>
-                              </div>
-                              <div class="collapse" id="item2-collapsible">
-                                <div class="card card-body p-1">
-                                  <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item3" data-name="transaction-item3" data-price="13000">
-                             <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item3-collapsible" aria-expanded="false" aria-controls="item3-collapsible">
-                               <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.13,000</p>
-                               </div>
-                               <div class="collapse" id="item3-collapsible">
-                                 <div class="card card-body p-1">
-                                   <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                 </div>
-                               </div>
-                             </div>
-                           </div>
-                           <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item4" data-name="transaction-item4" data-price="14000">
-                              <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item4-collapsible" aria-expanded="false" aria-controls="item4-collapsible">
-                                <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.14,000</p>
-                                </div>
-                                <div class="collapse" id="item4-collapsible">
-                                  <div class="card card-body p-1">
-                                    <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item5" data-name="transaction-item5" data-price="15000">
-                               <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item5-collapsible" aria-expanded="false" aria-controls="item5-collapsible">
-                                 <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.15,000</p>
-                                 </div>
-                                 <div class="collapse" id="item5-collapsible">
-                                   <div class="card card-body p-1">
-                                     <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                   </div>
-                                 </div>
-                               </div>
-                             </div>
-                             <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item6" data-name="transaction-item6" data-price="16000">
-                                <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item6-collapsible" aria-expanded="false" aria-controls="item6-collapsible">
-                                  <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.16,000</p>
-                                  </div>
-                                  <div class="collapse" id="item6-collapsible">
-                                    <div class="card card-body p-1">
-                                      <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item7" data-name="transaction-item7" data-price="17000">
-                                 <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item7-collapsible" aria-expanded="false" aria-controls="item7-collapsible">
-                                   <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.17,000</p>
-                                   </div>
-                                   <div class="collapse" id="item7-collapsible">
-                                     <div class="card card-body p-1">
-                                       <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                     </div>
-                                   </div>
-                                 </div>
-                               </div>
-                               <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" id="item8" data-name="transaction-item8" data-price="18000">
-                                  <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#item8-collapsible" aria-expanded="false" aria-controls="item8-collapsible">
-                                    <div class="card-body p-0">
-                                    <p class="card-text font-weight-bold mb-1">ITEM</p>
-                                    <p class="card-text">Rp.18,000</p>
-                                    </div>
-                                    <div class="collapse" id="item8-collapsible">
-                                      <div class="card card-body p-1">
-                                        <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                          
-                        </div>
-
-                      </div>
-
-                      <hr class="">
-
-                      <p class="col-12 mb-0 mt-4" name="item-list-category">Umpan</p>
-                      <div class="icons-list d-block text-nowrap overflow-auto border-0">
-
-                        <div class="container-fluid col-12 border-0 p-0">
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" name="transaction-item">
-                            <div class="card transaction-item text-truncate text-center border-0">
-                              <div class="card-body p-0">
-                                <p class="card-text">ITEM</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>  
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-              <!-- Item List Body -->
-
-              <!-- Transaction Information -->
-              <div class="col-lg-4 grid-margin">
-                <div class="card mh-100">
-                  <div class="card-body">
-
-                    <!-- Transaction Side Text -->
-                    <div name="transaction-sidenav">
-                      <div class="row">
-                        <label class="col-6 m-0 align-self-center" for="transaction-sidenav-id">ID</label>
-                        <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" id="transaction-sidenav-id" aria-describedby="transaction-sidenav-id" placeholder="Transaction ID" value="TRX-001" readonly>
-                      </div>
-                      <div class="form-group">
-                        <label class="align-self-center m-0" for="transaction-sidenav-amount">Total Amount</label>
-                        <input type="text" class="form-control bg-transparent text-right border-0 p-0 text-light" id="transaction-sidenav-amount" aria-describedby="transaction-sidenav-amount" placeholder="Amount Total" disabled>
-                      </div>
-                      <div class="row">
-                        <label class="col-6 m-0 align-self-center" for="transaction-sidenav-qty">Total Item(s)</label>
-                        <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" id="transaction-sidenav-qty" aria-describedby="transaction-sidenav-qty" placeholder="Item Total" disabled>
-                      </div>
-                      <div class="row">
-                        <label class="col-6 m-0 align-self-center" for="transaction-sidenav-customer">Customer</label>
-                        <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" id="transaction-sidenav-customer" aria-describedby="transaction-sidenav-customer" placeholder="Customer ID">
-                      </div>
-                      <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#transaction-modal">Proceed</button>
-                      </div>
-                    </div>
-                    <!-- Transaction Side Text -->
-
-                    <!-- Checkout Modal -->
-                    <div class="modal fade" id="transaction-modal" tabindex="-1" role="dialog" aria-labelledby="transaction-modal-label" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="transaction-modal-label">Transaction Checkout</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-
-                          <!-- Modal Body -->
-                          <div class="modal-body">
-                            <div class="container-fluid card icons-list d-block text-nowrap overflow-auto border-0">
-                              <div class="row" name="modal-item-row1">
-                                
-                                <div class="card-body p-0 col-3">
-                                  <p class="card-text font-weight-bold mb-1">- ITEM</p>
-                                  <p class="card-text">(1x) Rp.13,000</p>
-                                </div>
-                                <div class="card-body p-0 col-3">
-                                  <p class="card-text font-weight-bold mb-1">- ITEM</p>
-                                  <p class="card-text">(1x) Rp.13,000</p>
-                                </div>
-                                <div class="card-body p-0 col-3">
-                                  <p class="card-text font-weight-bold mb-1">- ITEM</p>
-                                  <p class="card-text">(1x) Rp.13,000</p>
-                                </div>
-
-                              </div>
-                            </div>
-                          </div>
-                          <!-- Modal Body -->
-
-                          <!-- Modal Footer -->
-                          <div class="modal-footer justify-content-around row">
-                            
-                            <div class="col-5">
-                              <p>Bank Account</p>
-                              <p class="mb-1 px-2">- BCA > 123456789</p>
-                              <p class="mb-1 px-2">- BCA > 123456789</p>
-                            </div>
-
-                            <div class="col-6">
-                              <div class="row">
-                                <label class="col-6 m-0 align-self-center" for="transaction-modal-amount">Total Amount</label>
-                                <input type="email" class="form-control form-control-sm bg-transparent col-6 text-right text-light border-0 p-0" id="transaction-modal-amount" aria-describedby="transaction-modal-amount" placeholder="Total Amount">
-                              </div>
-                              <div class="row">
-                                <label class="col-12 m-0 align-self-center">Payment</label>
-                                <div class="form-check form-check-inline col-6 m-0">
-                                  <input class="form-check-input" type="radio" name="transaction-payment" id="payment-bank-transfer" value="1">
-                                  <label class="form-check-label text-truncate" for="payment-bank-transfer">Bank Transfer</label>
-                                </div>
-                                <div class="form-check form-check-inline col-6 m-0">
-                                  <input class="form-check-input" type="radio" name="transaction-payment" id="payment-cash" value="2">
-                                  <label class="form-check-label text-truncate" for="payment-cash">Cash</label>
-                                </div>
-                                <div class="form-check form-check-inline col-6 m-0">
-                                  <input class="form-check-input" type="radio" name="transaction-payment" id="payment-credit" value="3">
-                                  <label class="form-check-label text-truncate" for="payment-credit">Credit</label>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div class="col-12 text-right mt-2">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                              <button type="button" class="btn btn-primary">Checkout</button>
-                            </div>
-
-                          </div>
-                          <!-- Modal Footer -->
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Checkout Modal -->
-
-                    <hr class="border-light">
-
-                    <!-- Open Transaction List -->
-                    <div class="card btn text-center rounded-lg border-light" name="open-transaction-list">
-                      <div class="card-body px-0 py-2">
-                        <div class="card-title">
-                          <p>Open Transaction ID</p>
-                        </div>
-                        <div class="card-subtitle m-0">
-                          <p class="m-0 py-1">RP. Amount</p>
-                          <p class="m-0 py-1">Item(s)</p>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Open Transaction List -->
-
-                  </div>
-                </div>
-
-              </div>
-              <!-- Transaction Information -->
-            </div>
+          <!-- Message Flash -->
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-warning alert-dismissible text-center" role="alert">
+            <span class=""><b>{{message}}</b></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          <div class="page-header">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Transaction</li>
+              </ol>
+            </nav>
+            <h3 class="page-title"> Transaction </h3>
+          </div>
+          <div class="row">
+            <div class="col-lg-8 grid-margin">
+              <div class="card mh-100">
+                <div class="card-body">
 
+                  <!-- Item List Head -->
+                  <div class="row col-sm-12 col-md-12 col-lg-12 pb-2">
+                    <div class="col-sm-8 col-lg-8">
+                      <a class="btn btn-primary" id="new-transaction" href="/transaction/">New Transaction</a>
+                    </div>
+                    <!-- <div class="col-sm-4 col-lg-4 pr-0">
+                      <input type="text" class="form-control form-control-sm rounded-pill" name="transaction-item-search" placeholder="Search Item...">
+                    </div> -->
+                  </div>
+                  <!-- Item List Head -->
+
+                  <!-- Item List Body -->
+                  <div class="items-list overflow-auto pr-2" style="height: 60vh;">
+                    {% for cat_index in range(message[0]|length) %}
+                    <p class="col-12 mb-0 mt-4" name="item-list-category">{{message[0][cat_index]}}</p>
+                    <div class="icons-list border-0">
+                      <!-- Loop for Items Here -->
+                      <div class="container-fluid row col-12 border-0" name="item-list-container">
+                        {% for item_index in range(message[2]|length) %}
+                        {% if message[2][item_index][2] == (cat_index + 1)|string %}
+                        <div class="col-2 d-inline-block rounded-lg border border-primary mx-1 my-2 p-1" 
+                        id="{{message[2][item_index][0]}}" 
+                        data-name="{{message[2][item_index][1]}}" data-price="{{message[2][item_index][5]}}">
+                          <div class="card transaction-item text-truncate text-center border-0" data-toggle="collapse" data-target="#{{message[2][item_index][0]}}-collapsible" aria-expanded="false" aria-controls="{{message[2][item_index][0]}}-collapsible">
+                            <div class="card-body p-0">
+                              <p class="card-text font-weight-bold mb-1">{{message[2][item_index][1]}}</p>
+                              <p class="card-text">{{message[2][item_index][5]|currency}}</p>
+                            </div>
+                            <div class="collapse" id="{{message[2][item_index][0]}}-collapsible">
+                              <div class="card card-body p-1">
+                                <input type="number" class="form-control form-control-sm rounded-pill text-light" name="transaction-item-amount" value="1" min="0" max="{{message[2][item_index][4]}}">
+                                {% if message[2][item_index][3] == '1' %}
+                                <span>M</span>
+                                {% endif %}
+                                {% if message[2][item_index][3] == '2' %}
+                                <span>Pcs</span>
+                                {% endif %}
+                                {% if message[2][item_index][3] == '3' %}
+                                <span>Ml</span>
+                                {% endif %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %} 
+                      </div>
+
+                    </div>
+                    {% endfor %} 
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- Item List Body -->
+
+            <!-- Transaction Information -->
+            <form action="/sales_order/add/" class="col-lg-4 grid-margin" method="POST">
+              <div class="card mh-100">
+                <div class="card-body">
+
+                  <!-- Transaction Side Text -->
+                  <div name="transaction-sidenav">
+                    <div class="row">
+                      <label class="col-6 m-0 align-self-center" for="IV_ID">ID</label>
+                      <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" name="IV_ID" id="IV_ID" aria-describedby="IV_ID" placeholder="Transaction ID" value="{{message[3]}}" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label class="align-self-center m-0" for="IV_AMOUNT">Total Amount</label>
+                      <input type="text" class="form-control bg-transparent text-right border-0 p-0 text-light" name="IV_AMOUNT" id="IV_AMOUNT" aria-describedby="IV_AMOUNT" placeholder="Amount Total" readonly>
+                    </div>
+                    <div class="row">
+                      <label class="col-6 m-0 align-self-center" for="IV_QTY">Total Item(s)</label>
+                      <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" name="IV_QTY" id="IV_QTY" aria-describedby="IV_QTY" placeholder="Item Total" readonly>
+                    </div>
+                    <div class="row">
+                      <label class="col-6 m-0 align-self-center" for="IV_CUSTOMERID">Customer</label>
+                      <input type="text" class="form-control bg-transparent col-6 text-right border-0 text-light" name="IV_CUSTOMERID" id="IV_CUSTOMERID" aria-describedby="IV_CUSTOMERID" placeholder="Customer ID">
+                    </div>
+                    <div class="col-12 text-center">
+                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#transaction-modal">Proceed</button>
+                    </div>
+                  </div>
+                  <!-- Transaction Side Text -->
+
+                  <!-- Checkout Modal -->
+                  <div class="modal fade" id="transaction-modal" tabindex="-1" role="dialog" aria-labelledby="transaction-modal-label" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="transaction-modal-label">Transaction Checkout</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                          <div class="container-fluid card icons-list d-block text-nowrap overflow-auto border-0">
+                            <div class="row" name="modal-item-row">
+                              <table class="table table-responsive" id="form-detail-table">
+                                <thead>
+                                  <th>Item ID</th>
+                                  <th>Item Name</th>
+                                  <th>Item Qty</th>
+                                  <th>Item Price</th>
+                                </thead>
+                                <tbody></tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Modal Body -->
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer justify-content-around row">
+
+                          <div class="col-5">
+                            <p>Bank Account</p>
+                            <p class="mb-1 px-2">- BCA > 123456789</p>
+                            <p class="mb-1 px-2">- BCA > 123456789</p>
+                          </div>
+
+                          <div class="col-6">
+                            <div class="row">
+                              <label class="col-6 m-0 align-self-center" for="transaction-modal-amount">Total Amount</label>
+                              <input type="email" class="form-control form-control-sm bg-transparent col-6 text-right text-light border-0 p-0" id="transaction-modal-amount" aria-describedby="transaction-modal-amount" placeholder="Total Amount">
+                            </div>
+                            <div class="row">
+                              <label class="col-12 m-0 align-self-center">Payment</label>
+                              <div class="form-check form-check-inline col-6 m-0">
+                                <input class="form-check-input" type="radio" name="IV_PAYMENT" id="payment-bank-transfer" value="1" required>
+                                <label class="form-check-label text-truncate" for="payment-bank-transfer">Bank Transfer</label>
+                              </div>
+                              <div class="form-check form-check-inline col-6 m-0">
+                                <input class="form-check-input" type="radio" name="IV_PAYMENT" id="payment-cash" value="2" required>
+                                <label class="form-check-label text-truncate" for="payment-cash">Cash</label>
+                              </div>
+                              <div class="form-check form-check-inline col-6 m-0">
+                                <input class="form-check-input" type="radio" name="IV_PAYMENT" id="payment-credit" value="3" required>
+                                <label class="form-check-label text-truncate" for="payment-credit">Credit</label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-12 text-right mt-2">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Checkout</button>
+                          </div>
+
+                        </div>
+                        <!-- Modal Footer -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Checkout Modal -->
+
+                  <!-- <hr class="border-light"> -->
+
+                  <!-- Open Transaction List -->
+                  <!-- <div class="card btn text-center rounded-lg border-light" name="open-transaction-list">
+                    <div class="card-body px-0 py-2">
+                      <div class="card-title">
+                        <p>Open Transaction ID</p>
+                      </div>
+                      <div class="card-subtitle m-0">
+                        <p class="m-0 py-1">RP. Amount</p>
+                        <p class="m-0 py-1">Item(s)</p>
+                      </div>
+                    </div>
+                  </div> -->
+                  <!-- Open Transaction List -->
+
+                </div>
+              </div>
+
+            </form>
+            <!-- Transaction Information -->
+          </div>
         </div>
+
       </div>
     </div>
-    <script src="{{ url_for('static', filename='assets/vendors/js/vendor.bundle.base.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/Transaction/main.js') }}"></script>
-    <!-- <script src="{{ url_for('static', filename='assets/js/settings.js') }}"></script> -->
-    <!-- <script src="{{ url_for('static', filename='assets/js/todolist.js') }}"></script> -->
-  </body>
+  </div>
+  <script src="{{ url_for('static', filename='assets/vendors/js/vendor.bundle.base.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/off-canvas.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/hoverable-collapse.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/misc.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/Transaction/main.js') }}"></script>
+  <!-- <script src="{{ url_for('static', filename='assets/js/settings.js') }}"></script> -->
+  <!-- <script src="{{ url_for('static', filename='assets/js/todolist.js') }}"></script> -->
+</body>
 </html>

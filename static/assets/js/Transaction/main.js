@@ -15,9 +15,9 @@
 	/* Local Cart Logic */
 	let cart = {};
 	let trx = {};
-	let trx_id = doc.querySelector('#transaction-sidenav-id').value;
-	let trx_sidenav_amount = doc.querySelector('#transaction-sidenav-amount');
-	let trx_sidenav_qty = doc.querySelector('#transaction-sidenav-qty');
+	let trx_id = doc.querySelector('#IV_ID').value;
+	let trx_sidenav_amount = doc.querySelector('#IV_AMOUNT');
+	let trx_sidenav_qty = doc.querySelector('#IV_QTY');
 
 	$('.transaction-item').on('hidden.bs.collapse', function(event) {
 		const item = event.currentTarget;
@@ -29,31 +29,31 @@
 		let item_qty = item.querySelector('[name="transaction-item-amount"]').value;
 		let item_class = item.classList;
 
-		trx.total_amount = 0;
-		trx.total_qty = 0;
+		trx.IV_AMOUNT = 0;
+		trx.IV_QTY = 0;
 
 		if(item_qty > 0) { /* Item Addition */
-			cart[item_id] = {name:item_name, price:item_price, qty:item_qty};
-			item_class.add('text-dark');
+			cart[item_id] = {IV_ITEMNAME:item_name, IV_ITEMPRICE:item_price, IV_ITEMQTY:item_qty};
+			item_class.add('text-light');
 			item_class.add('bg-primary');
 		} 
 		else { /* Item Removal */
 			cart.hasOwnProperty(item_id) && delete cart[item_id];
-			item_class.remove('text-dark');
+			item_class.remove('text-light');
 			item_class.remove('bg-primary');
 		}
 
 		/* Total Trx Amount */
 		for (const item in cart) {
-			trx.total_amount += (cart[item].price * cart[item].qty);
+			trx.IV_AMOUNT += (cart[item].IV_ITEMPRICE * cart[item].IV_ITEMQTY);
 		}
 
 		trx.item = cart;
-		trx.total_qty = Object.keys(cart).length;
+		trx.IV_QTY = Object.keys(cart).length;
 		localStorage.setItem(trx_id, JSON.stringify(trx));
 
-		trx_sidenav_amount.value = (trx.total_amount).toLocaleString('en-US');
-		trx_sidenav_qty.value = `${trx.total_qty} item(s)`;
+		trx_sidenav_amount.value = (trx.IV_AMOUNT).toLocaleString('en-US');
+		trx_sidenav_qty.value = trx.IV_QTY;
 	});
 
 
@@ -62,27 +62,25 @@
 		console.log('MODAL OPENED');
 		
 		const modal = event.currentTarget;
+		const table = document.querySelector('#form-detail-table')
+		const tbody = table.querySelector('tbody')
 
 		let local_trx = JSON.parse(localStorage.getItem(trx_id));
-		let local_trx_qty = local_trx.total_qty;
-		let local_trx_keys = Object.keys(local_trx);
+		let local_trx_qty = local_trx.IV_QTY;
+		let local_trx_keys = Object.keys(local_trx.item);
 
-		// local_trx_keys.forEach((item, index)=>{
-			
-		// });
+		local_trx_keys.forEach((key,idx)=>{
+			tbody.innerHTML += `
+				<tr>
+					<td><input type="text" name="IV_ID_${idx}" class="form-control form-control-sm border-0 bg-transparent text-light" value="${key}" readonly> </td>
+					<td><input type="text" name="IV_NAME_${idx}" class="form-control form-control-sm border-0 bg-transparent text-light" value="${local_trx.item[key].IV_ITEMNAME}" readonly> </td>
+					<td><input type="text" name="IV_QTY_${idx}" class="form-control form-control-sm border-0 bg-transparent text-light text-right" value="${local_trx.item[key].IV_ITEMQTY}" readonly> </td>
+					<td><input type="text" name="IV_SELLPRICE_${idx}" class="form-control form-control-sm border-0 bg-transparent text-light text-right" value="${parseInt(local_trx.item[key].IV_ITEMPRICE).toLocaleString('en-US')}" readonly> </td>
+				</tr>
+			`
+		})
 
-		// for (let item in local_trx.item) {
-		// 	let new_item_row = doc.createElement('div').classList.add('row');
-		// 	new_item_row;
-
-		// 	console.log(item);
-		// }
-
-		const new_item = `
-				      <div class="card-body p-0 col-3">
-				        <p class="card-text font-weight-bold mb-1">- ${'DESCRIPTION'}</p>
-				        <p class="card-text">(${'QTY'}x) Rp.${'PRICE'}</p>
-				      </div>`
+		const new_item = `<td></td>`
 
 
 	})

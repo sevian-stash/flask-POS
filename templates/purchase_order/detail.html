@@ -98,14 +98,14 @@
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Created Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][7] if message[1][7] is not none else '-'}} / ({{message[1][5] if message[1][5] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][7] if message[1][7] is not none else '-'}} / ({{message[1][5].strftime('%d/%m/%Y') if message[1][5] is not none else '-'}})" disabled>
                           </div>
                         </div>
 
                         <div class="row my-1">
                           <label class="col-lg-4 col-sm-2 col-form-label col-form-label-sm text-truncate px-0">Updated Info.</label>
                           <div class="col-lg-8 col-sm-6 pl-1 pr-2">
-                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][8] if message[1][8] is not none else '-'}} / ({{message[1][6] if message[1][6] is not none else '-'}})" disabled>
+                            <input type="text" class="form-control form-control-sm text-muted bg-dark" placeholder="-" value="{{message[1][8] if message[1][8] is not none else '-'}} / ({{message[1][6].strftime('%d/%m/%Y') if message[1][6] is not none else '-'}})" disabled>
                           </div>
                         </div>
                       </div>
@@ -133,7 +133,6 @@
                           <th class="text-primary"><b> Qty. </b></th>
                           <th class="text-primary"><b> Price </b></th>
                           <th class="text-primary"><b> Total Amount </b></th>
-                          <th class="text-primary"><b> Created Info. </b></th>
                           <th class="text-primary"><b> Updated Info. </b></th>
                         </tr>
                       </thead>
@@ -186,13 +185,7 @@
                         <td class="pt-0 pb-2 text-light">
                          <input type="text" 
                          class="form-control text-light bg-transparent border-0 px-0 py-0" 
-                         value="{{message[2][i][7] if message[2][i][7] is not none else '-'}} / ({{message[2][i][5] if message[2][i][5] is not none else '-'}})" 
-                         readonly> 
-                       </td>
-                       <td class="pt-0 pb-2 text-light">
-                         <input type="text" 
-                         class="form-control text-light bg-transparent border-0 px-0 py-0" 
-                         value="{{message[2][i][8] if message[2][i][8] is not none else '-'}} / ({{message[2][i][6] if message[2][i][6] is not none else '-'}})" 
+                         value="{{message[2][i][6] if message[2][i][6] is not none else '-'}} / ({{message[2][i][5] if message[2][i][5] is not none else '-'}})" 
                          readonly> 
                        </td>
                        {% endif %}
@@ -233,9 +226,6 @@
                         name="IV_TOTALAMOUNT_{{i}}"
                         readonly> 
                       </td>
-                      <td class="pt-0 pb-2 text-light">
-                       - / -
-                     </td>
                      <td class="pt-0 pb-2 text-light">
                        - / -
                      </td>

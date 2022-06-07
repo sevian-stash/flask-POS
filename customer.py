@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from model import Model
 from user import User
 from datetime import datetime, date
@@ -21,8 +21,8 @@ class Customer(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AR','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('customer'))
 
 
         # Get User Count
@@ -57,7 +57,7 @@ class Customer(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AR','_READ')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         data = []
@@ -82,7 +82,12 @@ class Customer(object):
             data.append(summary)
 
             # Append Details
-            data.append(self.Model.read('iv11','*',{'IV_CUSTOMERID':id}))
+            data.append(self.Model.read(
+                'iv11 i1 LEFT JOIN iv12 i2 ON i1.IV_ID = i2.IV_ID',
+                ['i1.IV_ID','i2.IV_ITEMQTY','i2.IV_ITEMPRICE','i1.CRTD_DT','i1.CRTD_BY'],
+                {'IV_CUSTOMERID':id})
+            )
+            
             return_path = 'customer/detail.html'
 
         return render_template(return_path, message=data)
@@ -98,8 +103,8 @@ class Customer(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AR','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('customer'))
 
         # Check if ID Exists
         db_ret = self.Model.read('ar01', ['AR_ID'],{'AR_ID':id})

@@ -10,13 +10,13 @@ class Model(object):
 			    user="local",
 			    passwd="localhost",
 			    database="happy_pancing"
-			    )
+			    )			
 		except MySQL.Error as e:
 			raise e
 			print(f'DB Not Found: {e}')
 		else:
 			self.cursor = self.sql.cursor(buffered=True)
-			print('DB Connected')
+			print(f'Is Connected: {self.sql.is_connected()}')
 
 	# def init(self):
 		# return [self.sql,self.cursor]
@@ -124,7 +124,6 @@ class Model(object):
 			
 		try:
 			self.sql.commit()
-			print(cursor.statement)
 			cursor.close()
 		except MySQL.Error as e:
 			print(e)
@@ -153,7 +152,6 @@ class Model(object):
 
 		try:
 			self.sql.commit()
-			print(cursor.statement)
 			cursor.close()
 		except MySQL.Error as e:
 			print(e)

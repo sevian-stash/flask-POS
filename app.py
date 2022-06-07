@@ -1,107 +1,59 @@
+import re
 from flask import Flask, render_template, flash, redirect, request, url_for
+from flask_mail import Mail
 from user import User
 from customer import Customer
 from supplier import Supplier
 from inventory import Inventory
+from transaction import Transaction
+from sales_order import Sales_Order
 from purchase_order import Purchase_Order
 from purchase_receivable import Purchase_Receivable
+from account_payable import Account_Payable
+from account_receivable import Account_Receivable
 from markupsafe import escape
 
+# App Config
 app = Flask(__name__)
-app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0'
+app.secret_key = b'\x87nO\x9bm\xe4Q"\x18\xf7F;\x0f\\v\xe0' # Session Secret Key
+# Flask-Mail Config
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'dapigeotto@gmail.com'
+app.config['MAIL_PASSWORD'] = 'uymqlvxmigwrrvat'
+app.config['MAIL_DEFAULT_SENDER'] = 'dapigeotto@gmail.com'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 
 # Create the object first
 User = User()
 Customer = Customer()
 Supplier = Supplier()
 Inventory = Inventory()
+Transaction = Transaction()
+Sales_Order = Sales_Order()
 Purchase_Order = Purchase_Order()
 Purchase_Receivable = Purchase_Receivable()
+Account_Payable = Account_Payable()
+Account_Receivable = Account_Receivable()
+Mail = Mail(app)
 
-# Start Class/Method
-
-class IV_Transaction(object):
-    
-    def __init__(self):
-        super(IV_Transaction, self).__init__()
-
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
-class Account_Receivable(object):
-
-    def __init__(self):
-        super(Account_Receivable, self).__init__()
-    
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
-
-class Account_Payable(object):
-
-    def __init__(self):
-        super(Account_Payable, self).__init__()
-    
-    def add():
-        return 
-
-    def read(id):
-        if id is None:
-            # Return all
-            return 
-        else:
-            # return by id
-            return
-        return
-
-    def update():
-        return 
-
-    def delete():
-        return
 
 # Start Route
+@app.template_filter()
+def currency(value):
+    value = float(value)
+    return "Rp.{:,.2f}".format(value)
 
 @app.route("/")
 def index():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    # With trx data
     return render_template('dashboard/index.html')
 
 @app.route("/login/")
 def login():
-    # With trx data
     return render_template('login/index.html')
 
 @app.route("/logout/")
@@ -109,45 +61,101 @@ def logout():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    # With trx data
     return User.logout(redirect(url_for('login')))
 
-# Inventory Transaction Route
+# Sales Order Transaction Route
 
 @app.route("/transaction/")
 def transaction():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('transaction/index.html')
+    return Transaction.read()
 
-@app.route("/transaction/add/")
-def transaction_add():
+# Sales Order Route
+
+@app.route("/sales_order/")
+def sales_order():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return IV_Transaction.add()
+    return Sales_Order.read()
 
-@app.route("/transaction/read/<id>/")
-def transaction_read():
+@app.route("/sales_order/add/", methods = ["POST"])
+def sales_order_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return IV_Transaction.read(id)
+    loop_len = Sales_Order.detail_row_len
+    data = dict()
 
-@app.route("/transaction/update/")
-def transaction_update():
+    # Summary
+    data.update({'iv11': {
+        'IV_ID': escape(request.form.get('IV_ID')),
+        'IV_CUSTOMERID': escape((request.form.get('IV_CUSTOMERID')).upper()),
+        'IV_PAYMENT': escape(request.form.get('IV_PAYMENT')),
+        'IV_QTY': escape(request.form.get('IV_QTY')),
+        'IV_AMOUNT': (escape(request.form.get('IV_AMOUNT'))).replace(',','')
+        }
+    })
+
+    # Details
+    data.update({'iv12': {}})
+    for i in range(loop_len):
+        if bool(request.form.get(f'IV_ID_{i}')):
+            data['iv12'].update({f'row_{i}': {
+                f'IV_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                f'IV_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                f'IV_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                f'IV_ITEMPRICE': (escape(request.form.get(f'IV_SELLPRICE_{i}'))).replace(',','')
+                }
+            })
+
+    Sales_Order.email(Mail, data)
+    return Sales_Order.add(data)
+
+@app.route("/sales_order/read/", methods = ['POST'])
+def sales_order_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return IV_Transaction.update()
+    id = escape(request.form['search_id'])
 
-@app.route("/transaction/delete/")
-def transaction_delete():
+    return Sales_Order.read(id)
+
+@app.route("/sales_order/update/", methods = ['POST'])
+def sales_order_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return IV_Transaction.delete()
+    loop_len = Sales_Order.detail_row_len
+    data = dict()
+
+    # Summary
+    data.update({'iv11': {
+        'IV_ID': escape(request.form.get('IV_ID')),
+        'IV_CUSTOMERID': escape(request.form.get('IV_CUSTOMERID')),
+        'IV_QTY': escape(request.form.get('IV_QTY')),
+        'IV_AMOUNT': re.sub('[^0-9,]',escape(request.form.get('IV_AMOUNT'))),
+        }
+    })
+
+    # Details
+    data.update({'iv12': {}})
+    for i in range(loop_len):
+        if request.form[f'IV_ID_{i}']:
+            data_len = len(data['iv12'])
+            data['iv12'].update({f'row_{data_len}': {
+                'IV_ID': escape(request.form.get('IV_ID')),
+                'IV_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                'IV_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                'IV_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                'IV_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+
+    return Sales_Order.update(data)
 
 # End Inventory Transaction Route
 # AR Transaction Route
@@ -157,36 +165,99 @@ def account_receivable():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('account_receivable/index.html')
+    return Account_Receivable.read()
 
-@app.route("/account_receivable/add/")
+@app.route("/account_receivable/add/", methods = ['POST', 'GET'])
 def account_receivable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Receivable.add()
+    loop_len = Account_Receivable.detail_row_len
 
-@app.route("/account_receivable/read/<id>/")
+    if request.method == 'GET':
+        return render_template('account_receivable/add.html', message=loop_len)
+
+    data = dict()
+
+    # Summary
+    data.update({'ar11': {
+        'AR_CUSTOMERID': escape(request.form.get('AR_CUSTOMERID')),
+        'AR_SALESORDERID': escape(request.form.get('AR_SALESORDERID')),
+        'AR_AMOUNT': escape(request.form.get('AR_AMOUNT')),
+        'AR_STATUS': escape(request.form.get('AR_STATUS')),
+        'AR_DUEDT': escape(request.form.get('AR_DUEDT'))
+        }
+    })
+
+    # Details
+    data.update({'ar12': {}})
+    for i in range(loop_len):
+        if bool(request.form.get(f'IV_ID_{i}')):
+            data['ar12'].update({f'row_{i}': {
+                f'AR_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                f'AR_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                f'AR_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                f'AR_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+
+    return Account_Receivable.add(data)
+
+@app.route("/account_receivable/read/", methods = ['POST'])
 def account_receivable_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('account_receivable/detail.html')
-    # return Account_Receivable.read(id)
+    id = escape(request.form['search_id'])
 
-@app.route("/account_receivable/update/")
+    return Account_Receivable.read(id)
+
+@app.route("/account_receivable/update/", methods = ['POST'])
 def account_receivable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Receivable.update()
+    loop_len = Account_Receivable.detail_row_len
+    data = dict()
 
-@app.route("/account_receivable/delete/")
-def account_receivable_delete():
+    # Summary
+    data.update({'ar11': {
+        'AR_ID': escape(request.form.get('AR_ID')),
+        'AR_CUSTOMERID': escape(request.form.get('AR_CUSTOMERID')),
+        'AR_SALESORDERID': escape(request.form.get('AR_SALESORDERID')),
+        'AR_QTY': escape(request.form.get('AR_QTY')),
+        'AR_AMOUNT': escape(request.form.get('AR_AMOUNT')),
+        'AR_DUEDT': escape(request.form.get('AR_DUEDT')),
+        'AR_STATUS': escape(request.form.get('AR_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'ar12': {}})
+    for i in range(loop_len):
+        if request.form[f'IV_ID_{i}']:
+            data_len = len(data['ar12'])
+            data['ar12'].update({f'row_{data_len}': {
+                'AR_ID': escape(request.form.get('AR_ID')),
+                'AR_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                'AR_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                'AR_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                'AR_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+
+    return Account_Receivable.update(data)
+
+@app.route("/account_receivable/activate/", methods = ["POST"])
+def account_receivable_activate():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Receivable.delete()
+    id = escape(request.form['AR_ID'])
+
+    return Account_Receivable.activate(id)
 
 # End AR Transaction Route
 # AP Transaction Route
@@ -196,36 +267,99 @@ def account_payable():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('account_payable/index.html')
+    return Account_Payable.read()
 
-@app.route("/account_payable/add/")
+@app.route("/account_payable/add/", methods = ['POST', 'GET'])
 def account_payable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Payable.add()
+    loop_len = Account_Payable.detail_row_len
 
-@app.route("/account_payable/read/<id>/")
+    if request.method == 'GET':
+        return render_template('account_payable/add.html', message=loop_len)
+
+    data = dict()
+
+    # Summary
+    data.update({'ap11': {
+        'AP_CUSTOMERID': escape(request.form.get('AP_CUSTOMERID')),
+        'AP_PURCHASEORDERID': escape(request.form.get('AP_PURCHASEORDERID')),
+        'AP_AMOUNT': escape(request.form.get('AP_AMOUNT')),
+        'AP_STATUS': escape(request.form.get('AP_STATUS')),
+        'AP_DUEDT': escape(request.form.get('AP_DUEDT'))
+        }
+    })
+
+    # Details
+    data.update({'ap12': {}})
+    for i in range(loop_len):
+        if bool(request.form.get(f'IV_ID_{i}')):
+            data['ap12'].update({f'row_{i}': {
+                f'AP_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                f'AP_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                f'AP_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                f'AP_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+
+    return Account_Payable.add(data)
+
+@app.route("/account_payable/read/", methods = ['POST'])
 def account_payable_read():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return render_template('account_payable/detail.html')
-    # return Account_Payable.read(id)
+    id = escape(request.form['search_id'])
 
-@app.route("/account_payable/update/")
+    return Account_Payable.read(id)
+
+@app.route("/account_payable/update/", methods = ['POST'])
 def account_payable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Payable.update()
+    loop_len = Account_Payable.detail_row_len
+    data = dict()
 
-@app.route("/account_payable/delete/")
-def account_payable_delete():
+    # Summary
+    data.update({'ap11': {
+        'AP_ID': escape(request.form.get('AP_ID')),
+        'AP_CUSTOMERID': escape(request.form.get('AP_CUSTOMERID')),
+        'AP_PURCHASEORDERID': escape(request.form.get('AP_PURCHASEORDERID')),
+        'AP_QTY': escape(request.form.get('AP_QTY')),
+        'AP_AMOUNT': escape(request.form.get('AP_AMOUNT')),
+        'AP_DUEDT': escape(request.form.get('AP_DUEDT')),
+        'AP_STATUS': escape(request.form.get('AP_STATUS'))
+        }
+    })
+
+    # Details
+    data.update({'ap12': {}})
+    for i in range(loop_len):
+        if request.form[f'IV_ID_{i}']:
+            data_len = len(data['ap12'])
+            data['ap12'].update({f'row_{data_len}': {
+                'AP_ID': escape(request.form.get('AP_ID')),
+                'AP_ITEMID': escape(request.form.get(f'IV_ID_{i}')),
+                'AP_ITEMNAME': escape(request.form.get(f'IV_NAME_{i}')),
+                'AP_ITEMQTY': escape(request.form.get(f'IV_QTY_{i}')),
+                'AP_ITEMPRICE': escape(request.form.get(f'IV_BUYPRICE_{i}'))
+                }
+            })
+
+
+    return Account_Payable.update(data)
+
+@app.route("/account_payable/activate/", methods = ["POST"])
+def account_payable_activate():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    return Account_Payable.delete()
+    id = escape(request.form['AP_ID'])
+
+    return Account_Payable.activate(id)
 
 # End AP Transaction Route
 # PO Transaction Route
@@ -242,7 +376,7 @@ def purchase_order_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    loop_len = 200
+    loop_len = Purchase_Order.detail_row_len
 
     if request.method == 'GET':
         return render_template('purchase_order/add.html', message=loop_len)
@@ -286,7 +420,7 @@ def purchase_order_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    loop_len = 200
+    loop_len = Purchase_Order.detail_row_len
     data = dict()
 
     # Summary
@@ -339,7 +473,7 @@ def purchase_receivable_add():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    loop_len = 200
+    loop_len = Purchase_Receivable.detail_row_len
 
     if request.method == 'GET':
         return render_template('purchase_receivable/add.html', message=loop_len)
@@ -384,7 +518,7 @@ def purchase_receivable_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    loop_len = 200
+    loop_len = Purchase_Receivable.detail_row_len
     data = dict()
 
     # Summary
@@ -627,7 +761,7 @@ def user_update():
     if not User.is_logged_in():
         return redirect(url_for('login'))
 
-    module = ['AP','AR','IV','PR','US']
+    module = User.module_id
     user_id = escape(request.form['US_ID'])
     username = escape(request.form['US_NAME'])
     module_permission = dict()

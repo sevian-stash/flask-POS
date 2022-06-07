@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from model import Model
 from user import User
 from datetime import datetime, date
@@ -21,8 +21,8 @@ class Supplier(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AP','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('supplier'))
 
 
         # Get User Count
@@ -57,7 +57,7 @@ class Supplier(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AP','_READ')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         data = []
@@ -81,7 +81,11 @@ class Supplier(object):
             data.append(summary)
 
             # Append Details
-            data.append(self.Model.read('po11','*',{'PO_CUSTOMERID':id}))
+            data.append(self.Model.read(
+                'po11',
+                ['PO_ID','PO_QTY','PO_AMOUNT','CRTD_DT','CRTD_BY'],
+                {'PO_CUSTOMERID':id}
+            ))
             return_path = 'supplier/detail.html'
 
         return render_template(return_path, message=data)
@@ -97,8 +101,8 @@ class Supplier(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'AP','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('supplier'))
 
         # Check if ID Exists
         db_ret = self.Model.read('ap01', ['AP_ID'],{'AP_ID':id})

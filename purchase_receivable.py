@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from model import Model
 from user import User
 from datetime import datetime, date
@@ -20,10 +20,10 @@ class Purchase_Receivable(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'PO','_CREATE')
+        access_permission = self.User.is_allowed(session_id,'PR','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_receivable'))
 
         # Supplier Check
         supplier = self.Model.read('ap01', ['AP_ID'], {'AP_ID':data['pr11']['PR_CUSTOMERID']})
@@ -74,8 +74,8 @@ class Purchase_Receivable(object):
                         'PR_ITEMNAME': data['pr12'][key]['PR_ITEMNAME'],
                         'PR_ITEMPRICE': data['pr12'][key]['PR_ITEMPRICE'] if bool(data['pr12'][key]['PR_ITEMPRICE']) else 0,
                         'PR_ITEMQTY': data['pr12'][key]['PR_ITEMQTY'] if bool(data['pr12'][key]['PR_ITEMQTY']) else 0,
-                        'CRTD_DT':datetime.date(datetime.now()),
-                        'CRTD_BY':session_id
+                        'UPDT_DT':datetime.date(datetime.now()),
+                        'UPDT_BY':session_id
                     }
                 )
 
@@ -96,9 +96,10 @@ class Purchase_Receivable(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'PO','_READ')
+        access_permission = self.User.is_allowed(session_id,'PR','_READ')
+        print(access_permission)
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         data = []
@@ -144,10 +145,10 @@ class Purchase_Receivable(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'PO','_UPDATE')
+        access_permission = self.User.is_allowed(session_id,'PR','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_receivable'))
 
         # Check if ID Exists
         db_ret = self.Model.read('pr11', ['PR_ID'],{'PR_ID':data['pr11']['PR_ID']})
@@ -209,10 +210,11 @@ class Purchase_Receivable(object):
             return redirect(url_for('login'))
 
         # Access Check
-        access_permission = self.User.is_allowed(session_id,'PO','_CREATE')
+        access_permission = self.User.is_allowed(session_id,'PR','_CREATE')
+        print(access_permission)
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('purchase_receivable'))
 
         # Check if ID Exists
         db_ret = self.Model.read('pr11', ['PR_ID'],{'PR_ID':id})
@@ -234,5 +236,7 @@ class Purchase_Receivable(object):
             flash('Failed to Save')
             return redirect(url_for('purchase_receivable'))
 
+        flash(f'{id} Activated')
+        
         return redirect(url_for('purchase_receivable'))
 

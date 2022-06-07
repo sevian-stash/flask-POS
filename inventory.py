@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, session
+from flask import render_template, flash, redirect, url_for
 from model import Model
 from user import User
 from datetime import datetime, date
@@ -21,8 +21,8 @@ class Inventory(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'IV','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('inventory'))
 
 
         # Get User Count
@@ -64,7 +64,7 @@ class Inventory(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'IV','_READ')
         if not access_permission:
-            flash("No Access Allowed")
+            flash("Not Allowed")
             return redirect(url_for('index'))
 
         data = []
@@ -88,7 +88,16 @@ class Inventory(object):
             data.append(summary)
 
             # Append Details
-            data.append(self.Model.read('po11','*',{'PO_CUSTOMERID':id}))
+            data.append(self.Model.read(
+                'po11 p1 LEFT JOIN po12 p2 ON p2.PO_ID = p1.PO_ID LEFT JOIN ap01 ap ON ap.AP_ID = p1.PO_CUSTOMERID',
+                ['p1.PO_ID','ap.AP_NAME','p2.PO_ITEMQTY','p2.PO_ITEMPRICE','p1.CRTD_DT','p1.CRTD_BY'],
+                {'p2.PO_ITEMID':id}
+            ))
+            data.append(self.Model.read(
+                'iv11 i1 LEFT JOIN iv12 i2 ON i2.IV_ID = i1.IV_ID LEFT JOIN ar01 ar ON i1.IV_CUSTOMERID = ar.AR_ID',
+                ['i1.IV_ID','ar.AR_NAME','i2.IV_ITEMQTY','i2.IV_ITEMPRICE','i1.CRTD_DT','i1.CRTD_BY'],
+                {'i2.IV_ITEMID':id}
+            ))
             return_path = 'inventory/detail.html'
 
         return render_template(return_path, message=data)
@@ -104,8 +113,8 @@ class Inventory(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'IV','_UPDATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('index'))
+            flash("Not Allowed")
+            return redirect(url_for('inventory'))
 
         # Check if ID Exists
         db_ret = self.Model.read('iv01', ['IV_ID'],{'IV_ID':id})
@@ -149,8 +158,8 @@ class Inventory(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'IV','_DELETE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('user'))
+            flash("Not Allowed")
+            return redirect(url_for('inventory'))
 
         self.Model.update('iv01', {'IV_ACTIVE':int(False)},{'IV_ID':id})
 
@@ -169,8 +178,8 @@ class Inventory(object):
         # Access Check
         access_permission = self.User.is_allowed(session_id,'IV','_CREATE')
         if not access_permission:
-            flash("No Access Allowed")
-            return redirect(url_for('user'))
+            flash("Not Allowed")
+            return redirect(url_for('inventory'))
 
         self.Model.update('iv01', {'IV_ACTIVE':int(True)},{'IV_ID':id})
 

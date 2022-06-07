@@ -18,6 +18,19 @@
       <div class="main-panel">
         <div class="content-wrapper">
 
+          <!-- Message Flash -->
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-warning alert-dismissible text-center" role="alert">
+            <span class=""><b>{{message}}</b></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
           <form action="/purchase_receivable/add/" method="POST" id="purchase_receivable-form">
             <div class="page-header">
               <nav aria-label="breadcrumb">
@@ -128,7 +141,7 @@
                     <p class="text-light">Transaction Item(s)</p>
                   </div>
                   <div class="table-responsive ">
-                    <table class="table table-striped table-bordered">
+                    <table class="table table-striped table-bordered" id="detail-form-table">
                       <thead>
                         <tr>
                           <th class="text-primary"><b> No. </b></th>
@@ -137,7 +150,6 @@
                           <th class="text-primary"><b> Qty. </b></th>
                           <th class="text-primary"><b> Price </b></th>
                           <th class="text-primary"><b> Total Amount </b></th>
-                          <th class="text-primary"><b> Created Info. </b></th>
                           <th class="text-primary"><b> Updated Info. </b></th>
                         </tr>
                       </thead>
@@ -177,9 +189,6 @@
                           name="IV_TOTALAMOUNT_{{i}}"
                           readonly> 
                         </td>
-                        <td class="pt-0 pb-2 text-light">
-                         - / -
-                       </td>
                        <td class="pt-0 pb-2 text-light">
                          - / -
                        </td>
